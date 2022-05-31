@@ -143,21 +143,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               },
               visualDensity: const VisualDensity(vertical: -3),
             ),
-            ListTile(
-              tileColor: ColorSelect.bluegrey50,
-              title: Text(
-                "My Account Info",
-                style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
-              ),
-              leading: Icon(
-                Icons.account_balance_outlined,
-                color: ColorSelect.secondary,
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              visualDensity: const VisualDensity(vertical: -3),
-            ),
+            // ListTile(
+            //   tileColor: ColorSelect.bluegrey50,
+            //   title: Text(
+            //     "My Account Info",
+            //     style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
+            //   ),
+            //   leading: Icon(
+            //     Icons.account_balance_outlined,
+            //     color: ColorSelect.secondary,
+            //   ),
+            //   onTap: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   visualDensity: const VisualDensity(vertical: -3),
+            // ),
             Container(
               margin: const EdgeInsets.only(left: 18),
               child: ListTile(
