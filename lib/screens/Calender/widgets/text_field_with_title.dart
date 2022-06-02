@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../Common/color_select.dart';
 
-class textFieldWithTitle extends StatelessWidget {
-  const textFieldWithTitle({
+class TextFieldWithTitle extends StatelessWidget {
+  const TextFieldWithTitle({
     Key? key,
     required this.title,
     required this.height,
@@ -35,33 +35,32 @@ class textFieldWithTitle extends StatelessWidget {
           width: width,
           height: height,
           child: TextField(
-              onChanged: onChanged,
-              controller: textEditingController,   
-              inputFormatters: [
-                  LengthLimitingTextInputFormatter(3),
-                   ],
-              keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 14.0),
-              onSubmitted: onSubmit,
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                border: const OutlineInputBorder(),
-                enabledBorder: OutlineInputBorder(
+            onChanged: onChanged,
+            controller: textEditingController,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(3),
+            ],
+            keyboardType: TextInputType.number,
+            style: const TextStyle(fontSize: 14.0),
+            onSubmitted: onSubmit,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
+              border: const OutlineInputBorder(),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(
+                  color: ColorSelect.secondary,
+                  width: 1.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
-                    color: ColorSelect.secondary,
-                    width: 1.0,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide(
-                      color: ColorSelect.primary,
-                    )),
-              ),
+                    color: ColorSelect.primary,
+                  )),
             ),
-          
+          ),
         ),
       ],
     );

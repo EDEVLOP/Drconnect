@@ -19,8 +19,9 @@ class VisitingTray extends StatelessWidget {
     this.deleteIconPressed,
     this.textFieldValue,
     this.onChangeTextField,
-     this.textFieldTitle, this.bottomDisplayText,
-  //  this.onSubmit,
+    this.textFieldTitle,
+    this.bottomDisplayText,
+    //  this.onSubmit,
   }) : super(key: key);
 
   final String? startTimeText;
@@ -39,7 +40,6 @@ class VisitingTray extends StatelessWidget {
   final int? textFieldValue;
   final String? textFieldTitle;
   final String? bottomDisplayText;
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,6 @@ class VisitingTray extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                   
                   ),
                   child: Visibility(
                     visible: isDeleteIconVisible!,
@@ -166,23 +165,22 @@ class VisitingTray extends StatelessWidget {
             ),
           ),
           Container(
-                margin: const EdgeInsets.only(top: 15, bottom: 8),
-                child: textFieldWithTitle(
-                  height: 45,
-                  width: 130,
-                  title: textFieldTitle!,
-                  textEditingController: TextEditingController(text: textFieldValue.toString()),              
-                  onChanged: onChangeTextField,
-                  //onSubmit: onSubmit,
-                ),
-              ),
-         
+            margin: const EdgeInsets.only(top: 15, bottom: 8),
+            child: TextFieldWithTitle(
+              height: 45,
+              width: 130,
+              title: textFieldTitle!,
+              textEditingController:
+                  TextEditingController(text: textFieldValue.toString()),
+              onChanged: onChangeTextField,
+              //onSubmit: onSubmit,
+            ),
+          ),
           const SizedBox(
             height: 13.0,
           ),
-
-Center(child: Text(bottomDisplayText!)),
- const SizedBox(
+          Center(child: Text(bottomDisplayText!)),
+          const SizedBox(
             height: 13.0,
           ),
         ],

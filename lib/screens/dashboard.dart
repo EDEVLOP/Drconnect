@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 import 'package:doctor_app_connect/Common/urls.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -46,33 +47,43 @@ class DashboardState extends State<Dashboard> {
     CalendarFormat.week: 'Week'
   };
 
-  //RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-  // .toggledOn; // Can be toggled on/off by longpressing a date
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
+  DateTime? currentDay;
+
+  String today = DateFormat("yyyy-MM-dd").format(DateTime.now());
 
   String? name;
   List<String> specialization = [];
   String experience = '';
+
+  int? bookedData;
+  int? monthBooked;
+
+  List<ChartData> chartData = [
+    ChartData('Booked', 0, Colors.cyan),
+    ChartData('Total', 100, ColorSelect.grey400),
+  ];
+
+  List<MonthlyChartData> monthlyChartData = [
+    MonthlyChartData('Booked', 0, Colors.cyan),
+    MonthlyChartData('Total', 0, ColorSelect.grey400),
+  ];
 
   @override
   void initState() {
     super.initState();
     futureData = fetchData();
     getSharedPref();
-    getLeaveData();
+    getTodaysData();
+    getMonthlyData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<ChartData> chartData = [
-      ChartData('David', 45, ColorSelect.lightblue200),
-      ChartData('Steve', 55, const Color.fromARGB(255, 51, 240, 30)),
-      ChartData('Jack', 34, ColorSelect.blueShade800),
-      ChartData('Others', 22, Colors.cyan)
-    ];
+    //log("enter " + bookedData.toString());
 
     final List<ChartData1> barData = [
       ChartData1('Mon', 8, ColorSelect.blueShade800),
@@ -126,7 +137,6 @@ class DashboardState extends State<Dashboard> {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.blue),
                     borderRadius: BorderRadius.circular(6.0),
-                    //color: const Color(0xd7e2e5e3)
                     color: ColorSelect.grey200),
                 height: 110,
                 child: Row(
@@ -211,8 +221,8 @@ class DashboardState extends State<Dashboard> {
                             margin: const EdgeInsets.only(bottom: 70.0),
                             alignment: Alignment.center,
                             //color: ColorSelect.grey200,
-                            child: const Text(
-                              "10",
+                            child: Text(
+                              bookedData.toString(),
                               style: TextStyle(fontSize: 18),
                               textAlign: TextAlign.right,
                             ),
@@ -227,12 +237,14 @@ class DashboardState extends State<Dashboard> {
                         children: <Widget>[
                           SfCircularChart(
                             series: <CircularSeries>[
-                              DoughnutSeries<ChartData, String>(
-                                  dataSource: chartData,
-                                  pointColorMapper: (ChartData data, _) =>
-                                      data.color,
-                                  xValueMapper: (ChartData data, _) => data.x,
-                                  yValueMapper: (ChartData data, _) => data.y,
+                              DoughnutSeries<MonthlyChartData, String>(
+                                  dataSource: monthlyChartData,
+                                  pointColorMapper:
+                                      (MonthlyChartData data, _) => data.color,
+                                  xValueMapper: (MonthlyChartData data, _) =>
+                                      data.x,
+                                  yValueMapper: (MonthlyChartData data, _) =>
+                                      data.y,
                                   startAngle: 230, // Starting angle of doughnut
                                   endAngle: 130 // Ending angle of doughnut
                                   )
@@ -254,8 +266,8 @@ class DashboardState extends State<Dashboard> {
                             margin: const EdgeInsets.only(bottom: 70.0),
                             alignment: Alignment.center,
                             //color: ColorSelect.grey200,
-                            child: const Text(
-                              "400",
+                            child: Text(
+                              monthBooked.toString(),
                               style: TextStyle(fontSize: 18),
                               textAlign: TextAlign.right,
                             ),
@@ -371,7 +383,7 @@ class DashboardState extends State<Dashboard> {
                         _rangeEnd = null;
                         // _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
-                      DateTime currentDay = DateTime.now();
+
                       print("DATE " + currentDay.toString());
                     }
                   },
@@ -516,9 +528,9 @@ class DashboardState extends State<Dashboard> {
 
   Future<void> getSharedPref() async {
     var prefs = await SharedPreferences.getInstance();
-    name = prefs.getString('name') ?? '';
+    name = prefs.getString('name') ?? "Guest user";
     specialization = prefs.getStringList('specialization') ?? [];
-    experience = prefs.getString('experience') ?? '';
+    experience = prefs.getString('experience') ?? "Experience";
 
     setState(() {});
 
@@ -527,33 +539,90 @@ class DashboardState extends State<Dashboard> {
     log("SPE " + specialization.toString());
   }
 
-  Future<void> getLeaveData() async {
+  Future<void> getTodaysData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
     final userId = prefs.getString('userId') ?? '';
 
-    Map<String, String> header = {
-      "Accept": "*/*",
-      "Authorization": "Bearer " + token
-    };
+    log("Date  Time  " + today.toString());
+
+    Map<String, String> header = {"Authorization": "Bearer " + token};
 
     http.Response response = await http.get(
-      Uri.parse(Api.dashboardLeaveData + "2022-05-29" + "&" + "2022-05-29"),
+      Uri.parse(Api.dounutChartApi +
+          "startDateTime=" +
+          today.toString() +
+          "&" +
+          "endDateTime=" +
+          today.toString()),
       headers: header,
     );
 
     if (response.body.isNotEmpty) {
       var jsonResponse = json.decode(response.body);
-      log('message ' + jsonResponse.toString());
+      bookedData = (jsonResponse["booked"] ?? 0);
+      int totalData = (jsonResponse["total"] ?? 0);
+
+      double tbookDetail = double.parse(bookedData.toString()) /
+          double.parse(totalData.toString()) *
+          100;
+
+      setState(() {
+        chartData = [
+          ChartData(
+              'Booked', double.parse(tbookDetail.toString()), Colors.cyan),
+          ChartData(
+              'Total', double.parse(totalData.toString()), ColorSelect.grey400),
+        ];
+      });
+    }
+  }
+
+  Future<void> getMonthlyData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+    final userId = prefs.getString('userId') ?? '';
+
+    currentDay = DateTime.now();
+    var fday = DateTime(currentDay!.year, currentDay!.month, 1);
+    var lday = DateTime(currentDay!.year, currentDay!.month + 1, 0);
+
+    log("DAYS " + fday.toString() + " " + lday.toString());
+
+    Map<String, String> header = {"Authorization": "Bearer " + token};
+
+    http.Response response = await http.get(
+      Uri.parse(Api.dounutChartApi +
+          "startDateTime=" +
+          fday.toString() +
+          "&" +
+          "endDateTime=" +
+          lday.toString()),
+      headers: header,
+    );
+
+    if (response.body.isNotEmpty) {
+      var jsonResponse = json.decode(response.body);
+      monthBooked = (jsonResponse["booked"] ?? 0);
+      int monthTotal = (jsonResponse["total"] ?? 0);
+
+      double bookDetail = double.parse(monthBooked.toString()) /
+          double.parse(monthTotal.toString()) *
+          100;
+
+      log('Result...= ' + bookDetail.toString());
+
+      setState(() {
+        monthlyChartData = [
+          MonthlyChartData(
+              'Booked', double.parse(bookDetail.toString()), Colors.cyan),
+          MonthlyChartData('Total', double.parse(monthTotal.toString()),
+              ColorSelect.grey400),
+        ];
+      });
     }
   }
 }
-
-// class DateFormat {
-//   DateFormat(String s);
-
-//   format(DateTime s) {}
-// }
 
 class ChartData {
   ChartData(this.x, this.y, this.color);
@@ -562,10 +631,17 @@ class ChartData {
   final Color color;
 }
 
+class MonthlyChartData {
+  MonthlyChartData(this.x, this.y, this.color);
+  final String x;
+  final double y;
+  final Color color;
+}
+
 class ChartData1 {
   ChartData1(this.x1, this.y1, this.color1);
   final String x1;
-  final double y1;
+  final int y1;
   final Color color1;
 }
 

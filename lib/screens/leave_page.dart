@@ -1010,9 +1010,12 @@ class _LeavePageState extends State<LeavePage> {
 
     if (response.statusCode == 200) {
       leaveData = leaveModelFromJson(response.body);
+
+      // var str = leaveData.
+
     }
 
-    // print(leaveData);
+    print(leaveData);
   }
 
   Future _deleteLeaveApi(String id) async {

@@ -261,10 +261,12 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
 
       /// Save data to shared preff
       prefs.setString('token', token);
-      prefs.setString('name', "Guest user");
-      prefs.setString('phone', "-");
+      prefs.setString('name', "Guest ");
+      prefs.setString('phone', "-Mobile number");
       prefs.setString('image', "");
       prefs.setString('isRegistered', isRegistered);
+      prefs.setString('experience', "Experience");
+      prefs.setStringList('specialization', ["Specialization"]);
 
       Navigator.pushAndRemoveUntil(
           context,
@@ -308,8 +310,10 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
       prefs.setString('isRegistered', isRegistered);
       //prefs.setString('specializations', specialization);
       prefs.setStringList(
-          'specializations', List<String>.from(_mySpecialization));
+          'specialization', List<String>.from(_mySpecialization));
       prefs.setString('experience', experience.toString());
+
+      log("EXPPPP " + experience.toString());
 
       Navigator.pushAndRemoveUntil(
           context,

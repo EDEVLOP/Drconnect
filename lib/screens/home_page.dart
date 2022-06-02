@@ -440,6 +440,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             prefs.setString('phone', "");
                             prefs.setString('image', "");
                             prefs.setString('IsRegistered', "");
+                            prefs.setString('specialization', "");
+                            prefs.setString('experience', "");
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
@@ -485,7 +487,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? '';
     name = prefs.getString('name') ?? 'Guest user';
-    phone = prefs.getString('phone') ?? '-';
+    phone = prefs.getString('phone') ?? '-Mobile number';
     image = prefs.getString('image') ?? '';
 
     setState(() {});
