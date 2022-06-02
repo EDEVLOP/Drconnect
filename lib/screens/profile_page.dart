@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:doctor_app_connect/Widgets/drconnect_background.dart';
+import 'package:doctor_app_connect/screens/dashboard.dart';
+import 'package:doctor_app_connect/screens/home_page.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'package:get/get.dart';
@@ -121,7 +123,13 @@ class ProfilePageState extends State<ProfilePage> {
         onWillPop: () {
           log('message' + '1');
           getSharedPrefs();
-          Navigator.pop(context, "back pressed");
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage()), // this mymainpage is your page to refresh
+            (Route<dynamic> route) => false,
+          );
 
           return Future.value(false);
         },
@@ -1600,7 +1608,9 @@ class ProfilePageState extends State<ProfilePage> {
           'specialization',
           List<String>.from(
               _mySpecialization)); // TO BE STORED AS ARRAY this line did the trick
-      prefs.setString('experience', experienceYear.toString()); //yup got it
+      prefs.setString('experience', experienceController.text); //yup got it
+
+      log("EXP" + experienceController.text);
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: ColorSelect.green,
