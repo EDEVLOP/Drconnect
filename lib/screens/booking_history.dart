@@ -42,7 +42,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: ColorSelect.secondary),
         title: Text(
-          "Bookings History",
+          "Manage Appointments",
           style: TextStyle(color: ColorSelect.secondary),
         ),
       ),
@@ -130,7 +130,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
                     child: const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        "Your Bookings",
+                        "Your Appointments",
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
