@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:developer';
 import 'dart:ffi';
 import 'package:doctor_app_connect/Common/urls.dart';
@@ -58,6 +59,10 @@ class DashboardState extends State<Dashboard> {
   String? name;
   List<String> specialization = [];
   String experience = '';
+  String profileImage = '';
+  String image = '';
+
+  double centPercent = 100;
 
   int? bookedData;
   int? monthBooked;
@@ -72,6 +77,8 @@ class DashboardState extends State<Dashboard> {
     MonthlyChartData('Total', 0, ColorSelect.grey400),
   ];
 
+  String token = '';
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +86,7 @@ class DashboardState extends State<Dashboard> {
     getSharedPref();
     getTodaysData();
     getMonthlyData();
+    image = profileImage;
   }
 
   @override
@@ -138,18 +146,28 @@ class DashboardState extends State<Dashboard> {
                     border: Border.all(color: Colors.blue),
                     borderRadius: BorderRadius.circular(6.0),
                     color: ColorSelect.grey200),
-                height: 110,
+                height: 120,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
-                        padding: const EdgeInsets.all(14),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: const Image(
-                            image: AssetImage("assets/images/pic2.jpg"),
-                          ),
-                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: profileImage != ''
+                            ? profilePictureView(token, profileImage)
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+
+                                child: const FadeInImage(
+                                    placeholder:
+                                        AssetImage("assets/images/pic2.jpg"),
+                                    image:
+                                        AssetImage("assets/images/pic2.jpg")),
+                                // ClipRRect(
+                                //   borderRadius: BorderRadius.circular(6),
+                                // Image(
+                                //   image: AssetImage("assets/images/pic2.jpg"),
+                                // ),
+                              ),
                       ),
                       Expanded(
                         child: Column(
@@ -195,14 +213,17 @@ class DashboardState extends State<Dashboard> {
                           SfCircularChart(
                             series: <CircularSeries>[
                               DoughnutSeries<ChartData, String>(
-                                  dataSource: chartData,
-                                  pointColorMapper: (ChartData data, _) =>
-                                      data.color,
-                                  xValueMapper: (ChartData data, _) => data.x,
-                                  yValueMapper: (ChartData data, _) => data.y,
-                                  startAngle: 230, // Starting angle of doughnut
-                                  endAngle: 130 // Ending angle of doughnut
-                                  )
+                                dataSource: chartData,
+                                pointColorMapper: (ChartData data, _) =>
+                                    data.color,
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
+                                startAngle: 230, // Starting angle of doughnut
+                                endAngle: 130, // Ending angle of doughnut
+                                dataLabelSettings: const DataLabelSettings(
+                                    isVisible: true,
+                                    alignment: ChartAlignment.far),
+                              )
                             ],
                           ),
                           Container(
@@ -211,7 +232,7 @@ class DashboardState extends State<Dashboard> {
                             alignment: Alignment.center,
                             //color: ColorSelect.grey200,
                             child: const Text(
-                              "Today's Booking",
+                              "Today's Appointments",
                               style: TextStyle(fontSize: 15),
                               textAlign: TextAlign.right,
                             ),
@@ -238,16 +259,20 @@ class DashboardState extends State<Dashboard> {
                           SfCircularChart(
                             series: <CircularSeries>[
                               DoughnutSeries<MonthlyChartData, String>(
-                                  dataSource: monthlyChartData,
-                                  pointColorMapper:
-                                      (MonthlyChartData data, _) => data.color,
-                                  xValueMapper: (MonthlyChartData data, _) =>
-                                      data.x,
-                                  yValueMapper: (MonthlyChartData data, _) =>
-                                      data.y,
-                                  startAngle: 230, // Starting angle of doughnut
-                                  endAngle: 130 // Ending angle of doughnut
-                                  )
+                                dataSource: monthlyChartData,
+                                pointColorMapper: (MonthlyChartData data, _) =>
+                                    data.color,
+                                xValueMapper: (MonthlyChartData data, _) =>
+                                    data.x,
+                                yValueMapper: (MonthlyChartData data, _) =>
+                                    data.y,
+                                startAngle: 230, // Starting angle of doughnut
+                                endAngle: 130,
+                                dataLabelSettings: const DataLabelSettings(
+                                    isVisible: true,
+                                    alignment: ChartAlignment
+                                        .far), // Ending angle of doughnut
+                              )
                             ],
                           ),
                           Container(
@@ -256,7 +281,7 @@ class DashboardState extends State<Dashboard> {
                             alignment: Alignment.center,
                             //color: ColorSelect.grey200,
                             child: const Text(
-                              "Monthly Booking",
+                              "Monthly Appointments",
                               style: TextStyle(fontSize: 15),
                               textAlign: TextAlign.right,
                             ),
@@ -526,17 +551,39 @@ class DashboardState extends State<Dashboard> {
     );
   }
 
+  Widget profilePictureView(String token, String pimage) {
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      child: CachedNetworkImage(
+          imageUrl: Api.getUploadImageApi + pimage,
+          height: MediaQuery.of(context).size.height,
+          width: 100.0,
+          placeholder: (context, url) => Container(
+                child: Image(image: AssetImage("assets/images/pic2.jpg")),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                //backgroundColor: Colors.white,
+                //radius: 10,
+              ),
+          fit: BoxFit.cover,
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          httpHeaders: {"Authorization": "Bearer " + token}),
+    );
+  }
+
   Future<void> getSharedPref() async {
     var prefs = await SharedPreferences.getInstance();
     name = prefs.getString('name') ?? "Guest user";
     specialization = prefs.getStringList('specialization') ?? [];
     experience = prefs.getString('experience') ?? "Experience";
+    profileImage = prefs.getString('image') ?? '';
 
     setState(() {});
 
     log("NAME" + name.toString());
     log("EXP " + experience.toString());
     log("SPE " + specialization.toString());
+    log("IMG " + profileImage.toString());
   }
 
   Future<void> getTodaysData() async {
@@ -565,14 +612,14 @@ class DashboardState extends State<Dashboard> {
 
       double tbookDetail = double.parse(bookedData.toString()) /
           double.parse(totalData.toString()) *
-          100;
+          centPercent;
 
       setState(() {
         chartData = [
           ChartData(
               'Booked', double.parse(tbookDetail.toString()), Colors.cyan),
-          ChartData(
-              'Total', double.parse(totalData.toString()), ColorSelect.grey400),
+          ChartData('Total', double.parse(centPercent.toString()),
+              ColorSelect.grey400),
         ];
       });
     }
@@ -608,7 +655,7 @@ class DashboardState extends State<Dashboard> {
 
       double bookDetail = double.parse(monthBooked.toString()) /
           double.parse(monthTotal.toString()) *
-          100;
+          centPercent;
 
       log('Result...= ' + bookDetail.toString());
 
@@ -616,7 +663,7 @@ class DashboardState extends State<Dashboard> {
         monthlyChartData = [
           MonthlyChartData(
               'Booked', double.parse(bookDetail.toString()), Colors.cyan),
-          MonthlyChartData('Total', double.parse(monthTotal.toString()),
+          MonthlyChartData('Total', double.parse(centPercent.toString()),
               ColorSelect.grey400),
         ];
       });
