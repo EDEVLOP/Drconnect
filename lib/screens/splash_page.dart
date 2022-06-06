@@ -36,7 +36,7 @@ class _SplashPageState extends State<SplashPage> {
             pageBuilder: (c, a1, a2) => const HomePage(),
             transitionsBuilder: (c, anim, a2, child) =>
                 FadeTransition(opacity: anim, child: child),
-            transitionDuration: const Duration(milliseconds: 1500),
+            transitionDuration: const Duration(milliseconds: 1300),
           ),
         );
       } else {

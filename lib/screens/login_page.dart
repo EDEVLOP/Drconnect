@@ -25,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    log("DateFormat: " + DateTime.now().toString());
+
     myController.text = "8984147187";
     myController.addListener(() {
       if (myController.text.length == 10) {

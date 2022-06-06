@@ -11,14 +11,14 @@ import '../Widgets/drconnect_background.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-class BookingHistoryPage extends StatefulWidget {
-  const BookingHistoryPage({Key? key}) : super(key: key);
+class BookingHistoryActivity extends StatefulWidget {
+  const BookingHistoryActivity({Key? key}) : super(key: key);
 
   @override
-  State<BookingHistoryPage> createState() => _BookingHistoryPageState();
+  State<BookingHistoryActivity> createState() => _BookingHistoryActivityState();
 }
 
-class _BookingHistoryPageState extends State<BookingHistoryPage> {
+class _BookingHistoryActivityState extends State<BookingHistoryActivity> {
   var uuid = const Uuid();
 
   bool isLoading = false;
@@ -38,14 +38,6 @@ class _BookingHistoryPageState extends State<BookingHistoryPage> {
     return DrConnectBackground(
         child: Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: ColorSelect.secondary),
-        title: Text(
-          "Manage Appointments",
-          style: TextStyle(color: ColorSelect.secondary),
-        ),
-      ),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),

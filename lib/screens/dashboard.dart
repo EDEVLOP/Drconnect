@@ -14,6 +14,7 @@ import '../Common/color_select.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:table_calendar/table_calendar.dart';
+import 'package:shimmer/shimmer.dart';
 
 Future<List<Data>> fetchData() async {
   final response =
@@ -37,7 +38,7 @@ class DashboardState extends State<Dashboard> {
   late Future<List<Data>> futureData;
   // final CalendarController _controller = CalendarController();
   String? _text = '', _titleText = '';
-  //Color? _headerColor, _viewHeaderColor, _calendarColor;
+  bool isLoading = true;
 
   //...............Calendar............................//
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -60,12 +61,16 @@ class DashboardState extends State<Dashboard> {
   List<String> specialization = [];
   String experience = '';
   String profileImage = '';
-  String image = '';
+
+  List weekList = [];
 
   double centPercent = 100;
 
   int? bookedData;
   int? monthBooked;
+  int? totalData;
+  int? monthTotal;
+  int? weekBooked;
 
   List<ChartData> chartData = [
     ChartData('Booked', 0, Colors.cyan),
@@ -77,31 +82,37 @@ class DashboardState extends State<Dashboard> {
     MonthlyChartData('Total', 0, ColorSelect.grey400),
   ];
 
+  List<ChartData1> barData = [
+    ChartData1('Mon', 0, ColorSelect.blueShade800),
+    ChartData1('Tue', 0, ColorSelect.blueShade800),
+    ChartData1('Wed', 0, Color.fromARGB(255, 236, 105, 44)),
+    ChartData1('Thur', 0, ColorSelect.blueShade800),
+    ChartData1('Fri', 0, ColorSelect.blueShade800),
+    ChartData1('Sat', 0, ColorSelect.blueShade800),
+    ChartData1('Sun', 0, ColorSelect.blueShade800),
+  ];
+
   String token = '';
 
   @override
   void initState() {
+    Future.delayed(Duration(seconds: 5)).then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+
     super.initState();
     futureData = fetchData();
     getSharedPref();
     getTodaysData();
     getMonthlyData();
-    image = profileImage;
+    getWeekData();
   }
 
   @override
   Widget build(BuildContext context) {
     //log("enter " + bookedData.toString());
-
-    final List<ChartData1> barData = [
-      ChartData1('Mon', 8, ColorSelect.blueShade800),
-      ChartData1('Tue', 7, ColorSelect.lightblue200),
-      ChartData1('Wed', 9, ColorSelect.grey400),
-      ChartData1('Thu', 10, ColorSelect.blueShade800),
-      ChartData1('Fri', 8, ColorSelect.lightblue200),
-      ChartData1('Sat', 5, ColorSelect.lightblue200),
-      ChartData1('Sun', 8, ColorSelect.bluegrey100)
-    ];
 
     void calendarTapped(CalendarTapDetails details) {
       if (details.targetElement == CalendarElement.header) {
@@ -138,414 +149,501 @@ class DashboardState extends State<Dashboard> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: ColorSelect.grey200),
-                height: 120,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        child: profileImage != ''
-                            ? profilePictureView(token, profileImage)
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-
-                                child: const FadeInImage(
-                                    placeholder:
-                                        AssetImage("assets/images/pic2.jpg"),
-                                    image:
-                                        AssetImage("assets/images/pic2.jpg")),
-                                // ClipRRect(
-                                //   borderRadius: BorderRadius.circular(6),
-                                // Image(
-                                //   image: AssetImage("assets/images/pic2.jpg"),
-                                // ),
-                              ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 16.0, bottom: 6.0),
-                              child: Text(name ?? "",
-                                  style: const TextStyle(fontSize: 16)
-                                  //.copyWith(color: Colors.white),
+          child: isLoading
+              ? Container(
+                  color: Colors.white,
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: ListView.builder(
+                      itemCount: 10,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              top: 3.0, bottom: 3.0, left: 0.0, right: 0.0),
+                          child: Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  color: ColorSelect.grey200),
+                              child: Shimmer.fromColors(
+                                  child: Container(
+                                    color: Colors.white,
                                   ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4.0),
-                              child: Text(specialization.join(', ').toString(),
-                                  style: const TextStyle(fontSize: 14)
-                                  //.copyWith(color: Colors.white)
-                                  ),
-                            ),
-                            Text(experience + " " + "Years",
-                                style: const TextStyle(fontSize: 14)
-                                //.copyWith(color: Colors.white)
-                                ),
-                          ],
-                        ),
-                      )
-                    ]),
-              ),
-              SizedBox(
-                height: 160,
-                //color: ColorSelect.blue,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  baseColor: ColorSelect.grey200,
+                                  highlightColor: Colors.white)),
+                        );
+                      }),
+                )
+              : Column(
                   children: <Widget>[
-                    Expanded(
-                      //   child: Container(
-                      // color: ColorSelect.greenshade900,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          SfCircularChart(
-                            series: <CircularSeries>[
-                              DoughnutSeries<ChartData, String>(
-                                dataSource: chartData,
-                                pointColorMapper: (ChartData data, _) =>
-                                    data.color,
-                                xValueMapper: (ChartData data, _) => data.x,
-                                yValueMapper: (ChartData data, _) => data.y,
-                                startAngle: 230, // Starting angle of doughnut
-                                endAngle: 130, // Ending angle of doughnut
-                                dataLabelSettings: const DataLabelSettings(
-                                    isVisible: true,
-                                    alignment: ChartAlignment.far),
-                              )
-                            ],
-                          ),
-                          Container(
-                            height: 20,
-                            margin: const EdgeInsets.only(bottom: 10.0),
-                            alignment: Alignment.center,
-                            //color: ColorSelect.grey200,
-                            child: const Text(
-                              "Today's Appointments",
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                          Container(
-                            height: 20,
-                            margin: const EdgeInsets.only(bottom: 70.0),
-                            alignment: Alignment.center,
-                            //color: ColorSelect.grey200,
-                            child: Text(
-                              bookedData.toString(),
-                              style: TextStyle(fontSize: 18),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                        ],
-                      ),
-                      // ),
-                    ),
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          SfCircularChart(
-                            series: <CircularSeries>[
-                              DoughnutSeries<MonthlyChartData, String>(
-                                dataSource: monthlyChartData,
-                                pointColorMapper: (MonthlyChartData data, _) =>
-                                    data.color,
-                                xValueMapper: (MonthlyChartData data, _) =>
-                                    data.x,
-                                yValueMapper: (MonthlyChartData data, _) =>
-                                    data.y,
-                                startAngle: 230, // Starting angle of doughnut
-                                endAngle: 130,
-                                dataLabelSettings: const DataLabelSettings(
-                                    isVisible: true,
-                                    alignment: ChartAlignment
-                                        .far), // Ending angle of doughnut
-                              )
-                            ],
-                          ),
-                          Container(
-                            height: 20,
-                            margin: const EdgeInsets.only(bottom: 10.0),
-                            alignment: Alignment.center,
-                            //color: ColorSelect.grey200,
-                            child: const Text(
-                              "Monthly Appointments",
-                              style: TextStyle(fontSize: 15),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                          Container(
-                            height: 20,
-                            margin: const EdgeInsets.only(bottom: 70.0),
-                            alignment: Alignment.center,
-                            //color: ColorSelect.grey200,
-                            child: Text(
-                              monthBooked.toString(),
-                              style: TextStyle(fontSize: 18),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.fromLTRB(12, 10, 12, 4),
-                //color: ColorSelect.blue,
-                child: Column(children: <Widget>[
-                  const Text(
-                    "This Week",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    //textAlign: TextAlign.center,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Container(
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.blue),
                           borderRadius: BorderRadius.circular(6.0),
-                          //color: const Color(0xd7e2e5e3)
                           color: ColorSelect.grey200),
-                      child: SfCartesianChart(
-                          margin: const EdgeInsets.only(top: 0),
-                          // backgroundColor: ColorSelect.grey200,
-                          //borderColor: Colors.black,
-                          plotAreaBorderWidth: 0,
-                          primaryXAxis: CategoryAxis(
-                            majorGridLines: const MajorGridLines(width: 0),
-                            axisLine: const AxisLine(width: 0),
-                          ),
-                          primaryYAxis: NumericAxis(
-                              isVisible: false,
-                              labelStyle: const TextStyle(fontSize: 0),
-                              majorGridLines: const MajorGridLines(width: 0),
-                              axisLine: const AxisLine(width: 0)),
-                          series: <ChartSeries<ChartData1, String>>[
-                            // Renders column chart
-                            ColumnSeries<ChartData1, String>(
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(6),
-                                    topRight: Radius.circular(6)),
-                                dataSource: barData,
-                                pointColorMapper: (ChartData1 data, _) =>
-                                    data.color1,
-                                xValueMapper: (ChartData1 data, _) => data.x1,
-                                yValueMapper: (ChartData1 data, _) => data.y1)
+                      height: 120,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              child: profileImage != ''
+                                  ? profilePictureView(token, profileImage)
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+
+                                      child: const FadeInImage(
+                                          placeholder: AssetImage(
+                                              "assets/images/pic2.jpg"),
+                                          image: AssetImage(
+                                              "assets/images/pic2.jpg")),
+                                      // ClipRRect(
+                                      //   borderRadius: BorderRadius.circular(6),
+                                      // Image(
+                                      //   image: AssetImage("assets/images/pic2.jpg"),
+                                      // ),
+                                    ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 16.0, bottom: 6.0),
+                                    child: Text(name ?? "",
+                                        style: const TextStyle(fontSize: 16)
+                                        //.copyWith(color: Colors.white),
+                                        ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    child: Text(
+                                        specialization.join(', ').toString(),
+                                        style: const TextStyle(fontSize: 14)
+                                        //.copyWith(color: Colors.white)
+                                        ),
+                                  ),
+                                  Text(experience + " " + "Years",
+                                      style: const TextStyle(fontSize: 14)
+                                      //.copyWith(color: Colors.white)
+                                      ),
+                                ],
+                              ),
+                            )
                           ]),
                     ),
-                  )
-                ]),
-              ),
-              Container(
-                alignment: Alignment.center,
-                //color: Colors.amber,
-                //height: 30,
-                margin: const EdgeInsets.fromLTRB(12, 10, 12, 3),
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Calender & Appointment",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  ),
-                ),
-              ),
-              Container(
-                // padding: const EdgeInsets.symmetric(horizontal: 8),
-                margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-                // decoration: BoxDecoration(
-                //     border: Border.all(color: Colors.blue),
-                //     borderRadius: BorderRadius.circular(6.0),
-                //     color: ColorSelect.grey200),
-                child: TableCalendar(
-                  firstDay: DateTime.utc(2010, 10, 16),
-                  lastDay: DateTime.utc(2030, 3, 14),
-                  focusedDay: DateTime.now(),
+                    SizedBox(
+                      height: 160,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: <Widget>[
+                                SfCircularChart(
+                                  series: <CircularSeries>[
+                                    DoughnutSeries<ChartData, String>(
+                                      dataSource: chartData,
+                                      pointColorMapper: (ChartData data, _) =>
+                                          data.color,
+                                      xValueMapper: (ChartData data, _) =>
+                                          data.x,
+                                      yValueMapper: (ChartData data, _) =>
+                                          data.y,
+                                      startAngle:
+                                          230, // Starting angle of doughnut
+                                      endAngle: 130,
 
-                  calendarStyle: const CalendarStyle(
-                    // Use `CalendarStyle` to customize the UI
-                    outsideDaysVisible: false,
-                    selectedDecoration: BoxDecoration(
-                      color: Color.fromARGB(255, 230, 122, 34),
-                      shape: BoxShape.circle,
-                    ),
-
-                    todayDecoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  // rangeStartDay: _rangeStart,
-                  // rangeEndDay: _rangeEnd,
-                  calendarFormat: _calendarFormat,
-
-                  //rangeSelectionMode: _rangeSelectionMode,
-                  onDaySelected: (selectedDay, focusedDay) {
-                    if (!isSameDay(_selectedDay, selectedDay)) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                        _rangeStart = null; // Important to clean those
-                        _rangeEnd = null;
-                        // _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                      });
-
-                      print("DATE " + currentDay.toString());
-                    }
-                  },
-
-                  // onRangeSelected: (start, end, focusedDay) {
-                  //   setState(() {
-                  //     _selectedDay = null;
-                  //     _focusedDay = focusedDay;
-                  //     _rangeStart = start;
-                  //     _rangeEnd = end;
-                  //     _rangeSelectionMode = RangeSelectionMode.toggledOn;
-                  //   });
-                  // },
-                  onFormatChanged: (format) {
-                    if (_calendarFormat != format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    }
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 0, left: 12),
-                width: MediaQuery.of(context).size.width,
-                height: 40,
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Appointment List",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Container(
-                height: 250,
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                child: FutureBuilder(
-                    future: futureData,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        List<Data> data = snapshot.data;
-                        return ListView.builder(
-                            itemCount: data.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                margin: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                //height: 90,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.blue),
-                                  color: ColorSelect.bluegrey100,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                //                   //color: Colors.white,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 6),
-                                      padding: const EdgeInsets.all(4.0),
-                                      width: 240,
-                                      child: Column(
-                                        // textDirection: TextDirection.TL,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            data[index].title,
-                                          ),
-                                          Text(data[index].id.toString() +
-                                              "1234"),
-                                          const Text("9am-12pm"),
-                                          const Text(
-                                              "Plot no. 251, Sainik School Rd")
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          right: 8.0, top: 8, bottom: 8),
-                                      padding: const EdgeInsets.all(3),
-                                      //height: 35,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0)),
-
-                                      child: Column(children: const <Widget>[
-                                        Text(
-                                          "Total",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        SizedBox(
-                                          height: 2,
-                                        ),
-                                        Text(
-                                          "Booking",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          "8",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
-                                        ),
-                                      ]),
-
-                                      //color: Colors.pinkAccent,
+                                      // Ending angle of doughnut
                                     )
                                   ],
                                 ),
-                              );
+                                Container(
+                                  height: 45,
+                                  margin: const EdgeInsets.only(bottom: 10.0),
+                                  alignment: Alignment.center,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        totalData.toString(),
+                                        style: TextStyle(fontSize: 18),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      SizedBox(
+                                        height: 3.0,
+                                      ),
+                                      const Text(
+                                        "Today's Appointments",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 20,
+                                  margin: const EdgeInsets.only(bottom: 70.0),
+                                  alignment: Alignment.center,
+                                  //color: ColorSelect.grey200,
+                                  child: Text(
+                                    bookedData.toString(),
+                                    style: TextStyle(fontSize: 18),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // ),
+                          ),
+                          Expanded(
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: <Widget>[
+                                SfCircularChart(
+                                  series: <CircularSeries>[
+                                    DoughnutSeries<MonthlyChartData, String>(
+                                      dataSource: monthlyChartData,
+                                      pointColorMapper:
+                                          (MonthlyChartData data, _) =>
+                                              data.color,
+                                      xValueMapper:
+                                          (MonthlyChartData data, _) => data.x,
+                                      yValueMapper:
+                                          (MonthlyChartData data, _) => data.y,
+                                      startAngle:
+                                          230, // Starting angle of doughnut
+                                      endAngle: 130, // Ending angle of doughnut
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  height: 45,
+                                  margin: const EdgeInsets.only(bottom: 10.0),
+                                  alignment: Alignment.center,
+                                  //color: ColorSelect.grey200,
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        monthTotal.toString(),
+                                        style: TextStyle(fontSize: 18),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      SizedBox(
+                                        height: 3.0,
+                                      ),
+                                      const Text(
+                                        "Monthly Appointments",
+                                        style: TextStyle(fontSize: 15),
+                                        textAlign: TextAlign.right,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  height: 20,
+                                  margin: const EdgeInsets.only(bottom: 70.0),
+                                  alignment: Alignment.center,
+                                  //color: ColorSelect.grey200,
+                                  child: Text(
+                                    monthBooked.toString(),
+                                    style: TextStyle(fontSize: 18),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+                      //color: ColorSelect.blue,
+                      child: Column(children: <Widget>[
+                        const Text(
+                          "This Week",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                          //textAlign: TextAlign.center,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              // border: Border.all(
+                              // color: Color.fromARGB(255, 120, 180, 228)),
+                              borderRadius: BorderRadius.circular(6.0),
+                              color: ColorSelect.grey200,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color.fromARGB(255, 152, 152, 152),
+                                  blurRadius: 4.0,
+                                  spreadRadius: 1.0,
+                                  offset: Offset(1.0,
+                                      2.0), // shadow direction: bottom right
+                                )
+                              ],
+                            ),
+                            child: SfCartesianChart(
+                                margin: const EdgeInsets.only(top: 0),
+                                // backgroundColor: ColorSelect.grey200,
+                                //borderColor: Colors.black,
+                                plotAreaBorderWidth: 0,
+                                primaryXAxis: CategoryAxis(
+                                  majorGridLines:
+                                      const MajorGridLines(width: 0),
+                                  axisLine: const AxisLine(width: 0),
+                                ),
+                                primaryYAxis: NumericAxis(
+                                  isVisible: true,
+                                  labelAlignment: LabelAlignment.start,
+                                  // labelStyle: const TextStyle(fontSize: 0),
+                                  // majorGridLines: const MajorGridLines(width: 0),
+                                  // axisLine: const AxisLine(width: 1)
+                                ),
+                                series: <ChartSeries<ChartData1, String>>[
+                                  // Renders column chart
+                                  ColumnSeries<ChartData1, String>(
+                                      borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.circular(6),
+                                          topRight: Radius.circular(6)),
+                                      dataSource: barData,
+                                      pointColorMapper: (ChartData1 data, _) =>
+                                          data.color1,
+                                      xValueMapper: (ChartData1 data, _) =>
+                                          data.x1,
+                                      yValueMapper: (ChartData1 data, _) =>
+                                          data.y1)
+                                ]),
+                          ),
+                        )
+                      ]),
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      //color: Colors.amber,
+                      //height: 30,
+                      margin: const EdgeInsets.fromLTRB(12, 10, 12, 3),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "Calender & Appointment",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      // padding: const EdgeInsets.symmetric(horizontal: 8),
+                      margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+
+                      decoration: BoxDecoration(
+                        // border: Border.all(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(6.0),
+                        color: ColorSelect.grey200,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 1.0,
+                            spreadRadius: 0.0,
+                            offset: Offset(
+                                1.0, 1.0), // shadow direction: bottom right
+                          )
+                        ],
+                      ),
+                      child: TableCalendar(
+                        firstDay: DateTime.utc(2010, 10, 16),
+                        lastDay: DateTime.utc(2030, 3, 14),
+                        focusedDay: DateTime.now(),
+
+                        calendarStyle: const CalendarStyle(
+                          // Use `CalendarStyle` to customize the UI
+                          outsideDaysVisible: false,
+                          selectedDecoration: BoxDecoration(
+                            color: Color.fromARGB(255, 230, 122, 34),
+                            shape: BoxShape.circle,
+                          ),
+
+                          todayDecoration: BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+
+                        selectedDayPredicate: (day) =>
+                            isSameDay(_selectedDay, day),
+                        // rangeStartDay: _rangeStart,
+                        // rangeEndDay: _rangeEnd,
+                        calendarFormat: _calendarFormat,
+
+                        //rangeSelectionMode: _rangeSelectionMode,
+                        onDaySelected: (selectedDay, focusedDay) {
+                          if (!isSameDay(_selectedDay, selectedDay)) {
+                            setState(() {
+                              _selectedDay = selectedDay;
+                              _focusedDay = focusedDay;
+                              _rangeStart = null; // Important to clean those
+                              _rangeEnd = null;
+                              // _rangeSelectionMode = RangeSelectionMode.toggledOff;
                             });
-                      } else {
-                        if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
-                        }
-                        return const CircularProgressIndicator();
-                        //           //return Text("");
-                      }
-                    }),
-              ),
-            ],
-          ),
+
+                            print("DATE " + currentDay.toString());
+                          }
+                        },
+
+                        // onRangeSelected: (start, end, focusedDay) {
+                        //   setState(() {
+                        //     _selectedDay = null;
+                        //     _focusedDay = focusedDay;
+                        //     _rangeStart = start;
+                        //     _rangeEnd = end;
+                        //     _rangeSelectionMode = RangeSelectionMode.toggledOn;
+                        //   });
+                        // },
+                        onFormatChanged: (format) {
+                          if (_calendarFormat != format) {
+                            setState(() {
+                              _calendarFormat = format;
+                            });
+                          }
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(top: 10, bottom: 0, left: 12),
+                      width: MediaQuery.of(context).size.width,
+                      height: 40,
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "Appointment List",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 250,
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      child: FutureBuilder(
+                          future: futureData,
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
+                              List<Data> data = snapshot.data;
+                              return ListView.builder(
+                                  itemCount: data.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Container(
+                                      margin:
+                                          const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                      //height: 90,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.blue),
+                                        color: ColorSelect.bluegrey100,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      //                   //color: Colors.white,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            margin:
+                                                const EdgeInsets.only(left: 6),
+                                            padding: const EdgeInsets.all(4.0),
+                                            width: 240,
+                                            child: Column(
+                                              // textDirection: TextDirection.TL,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  data[index].title,
+                                                ),
+                                                Text(data[index].id.toString() +
+                                                    "1234"),
+                                                const Text("9am-12pm"),
+                                                const Text(
+                                                    "Plot no. 251, Sainik School Rd")
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                right: 8.0, top: 8, bottom: 8),
+                                            padding: const EdgeInsets.all(3),
+                                            //height: 35,
+                                            width: 70,
+                                            decoration: BoxDecoration(
+                                                color: Colors.blue,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0)),
+
+                                            child:
+                                                Column(children: const <Widget>[
+                                              Text(
+                                                "Total",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              Text(
+                                                "Booking",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                "8",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ),
+                                            ]),
+
+                                            //color: Colors.pinkAccent,
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            } else {
+                              if (snapshot.hasError) {
+                                return Text("${snapshot.error}");
+                              }
+                              return const CircularProgressIndicator();
+                              //           //return Text("");
+                            }
+                          }),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -608,7 +706,7 @@ class DashboardState extends State<Dashboard> {
     if (response.body.isNotEmpty) {
       var jsonResponse = json.decode(response.body);
       bookedData = (jsonResponse["booked"] ?? 0);
-      int totalData = (jsonResponse["total"] ?? 0);
+      totalData = (jsonResponse["total"] ?? 0);
 
       double tbookDetail = double.parse(bookedData.toString()) /
           double.parse(totalData.toString()) *
@@ -651,7 +749,7 @@ class DashboardState extends State<Dashboard> {
     if (response.body.isNotEmpty) {
       var jsonResponse = json.decode(response.body);
       monthBooked = (jsonResponse["booked"] ?? 0);
-      int monthTotal = (jsonResponse["total"] ?? 0);
+      monthTotal = (jsonResponse["total"] ?? 0);
 
       double bookDetail = double.parse(monthBooked.toString()) /
           double.parse(monthTotal.toString()) *
@@ -668,6 +766,60 @@ class DashboardState extends State<Dashboard> {
         ];
       });
     }
+  }
+
+  Future<void> getWeekData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token') ?? '';
+    final userId = prefs.getString('userId') ?? '';
+
+    DateTime now = DateTime.now();
+    int currentDay1 = now.weekday;
+    DateTime firstDayOfWeek = now.subtract(Duration(days: currentDay1 - 1));
+    DateTime lastDayOfWeek = now.subtract(Duration(days: currentDay1 - 7));
+
+    Map<String, String> header = {"Authorization": "Bearer " + token};
+
+    http.Response response = await http.get(
+      Uri.parse(Api.barGraphChartApi +
+          "startDateTime=" +
+          firstDayOfWeek.toString() +
+          "&" +
+          "endDateTime=" +
+          lastDayOfWeek.toString()),
+      headers: header,
+    );
+
+    if (response.body.isNotEmpty) {
+      //var jsonResponse = json.decode(response.body);
+      var userLeave = jsonDecode(response.body.toString());
+      //weekBooked = (jsonResponse["booked"] ?? 0);
+      if (response.statusCode == 200) {
+        for (Map i in userLeave) {
+          var booked = i["booked"].toString();
+          //var endTime = i["endDateTime"];
+
+          weekList.add(booked);
+
+          log("BOOKED  " + booked);
+        }
+        print(weekList[0]);
+      }
+
+      setState(() {
+        barData = [
+          ChartData1('Mon', int.parse(weekList[0]), ColorSelect.blueShade800),
+          ChartData1('Tue', int.parse(weekList[1]), ColorSelect.lightblue200),
+          ChartData1('Wed', int.parse(weekList[2]),
+              Color.fromARGB(240, 241, 150, 108)),
+          ChartData1('Thu', int.parse(weekList[3]), ColorSelect.blueShade800),
+          ChartData1('Fri', int.parse(weekList[4]), ColorSelect.lightblue200),
+          ChartData1('Sat', int.parse(weekList[5]), ColorSelect.blue),
+          ChartData1('Sun', int.parse(weekList[6]), ColorSelect.purple)
+        ];
+      });
+    }
+    // log("WEEK " + weekBooked.toString());
   }
 }
 

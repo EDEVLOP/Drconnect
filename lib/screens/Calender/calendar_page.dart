@@ -505,6 +505,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                     visitingTrayList[index].textFieldValue = 0;
                                     visitingTrayList[index].bottomDisplayText =
                                         0;
+
                                     log("Patient taped");
                                   });
                                 },

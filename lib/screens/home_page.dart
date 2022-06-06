@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:doctor_app_connect/screens/booking_activity.dart';
 import 'package:doctor_app_connect/screens/booking_history.dart';
 import 'package:doctor_app_connect/screens/dashboard.dart';
 import 'package:doctor_app_connect/screens/package_page.dart';
@@ -143,144 +144,169 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               },
               visualDensity: const VisualDensity(vertical: -3),
             ),
-            ListTile(
-              tileColor: ColorSelect.bluegrey50,
+            ExpansionTile(
               title: Text(
                 "My Account Info",
                 style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
+                textAlign: TextAlign.left,
               ),
               leading: Icon(
                 Icons.account_balance_outlined,
                 color: ColorSelect.secondary,
               ),
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              visualDensity: const VisualDensity(vertical: -3),
+              collapsedIconColor: Colors.blue,
+              iconColor: Colors.grey,
+              //collapsedBackgroundColor: ColorSelect.bluegrey50,
+              backgroundColor: ColorSelect.bluegrey50,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 18),
+                  child: ListTile(
+                    title: Text(
+                      "Add Clinic",
+                      style:
+                          TextStyle(fontSize: 12, color: ColorSelect.secondary),
+                    ),
+                    leading: Icon(
+                      Icons.add_outlined,
+                      color: ColorSelect.secondary,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ClinicPage()),
+                      );
+                    },
+                    visualDensity: const VisualDensity(vertical: -3),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 18),
+                  child: ListTile(
+                    title: Text(
+                      "Create Appointments",
+                      style:
+                          TextStyle(fontSize: 12, color: ColorSelect.secondary),
+                    ),
+                    leading: Icon(
+                      Icons.event_available,
+                      color: ColorSelect.secondary,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CalendarPage(
+                                clinicName: "",
+                                clinicId: "",
+                                id: "",
+                                startDate: "",
+                                endDate: "",
+                                startTime: "",
+                                endTime: "",
+                                slot: 0,
+                                slotSelector: "",
+                                intervalSelector: "",
+                                numberOfPatients: 0,
+                                byDays: [])),
+                      );
+                    },
+                    visualDensity: const VisualDensity(vertical: -3),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 18),
+                  child: ListTile(
+                    title: Text(
+                      "Manage Leaves",
+                      style:
+                          TextStyle(fontSize: 12, color: ColorSelect.secondary),
+                    ),
+                    leading: Icon(
+                      Icons.calendar_month_outlined,
+                      color: ColorSelect.secondary,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LeavePage()),
+                      );
+                    },
+                    visualDensity: const VisualDensity(vertical: -3),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 18),
+                  child: ListTile(
+                    title: Text("Manage Appointments",
+                        style: TextStyle(
+                            fontSize: 12, color: ColorSelect.secondary)),
+                    leading: Icon(
+                      Icons.book_online_outlined,
+                      color: ColorSelect.secondary,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BookingHistoryPage()),
+                      );
+                    },
+                    visualDensity: const VisualDensity(vertical: -3),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 18),
+                  child: ListTile(
+                    title: Text(
+                      "My Packages",
+                      style:
+                          TextStyle(fontSize: 12, color: ColorSelect.secondary),
+                    ),
+                    leading: Icon(
+                      Icons.currency_pound_outlined,
+                      color: ColorSelect.secondary,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      var future = Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PackagePage()),
+                      );
+                      future.then((value) {
+                        log(value);
+                        getSharedPrefs();
+                      });
+                    },
+                    visualDensity: VisualDensity(vertical: -3),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.only(left: 18),
-              child: ListTile(
-                title: Text(
-                  "Add Clinic",
-                  style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
-                ),
-                leading: Icon(
-                  Icons.add_outlined,
-                  color: ColorSelect.secondary,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const ClinicPage()),
-                  );
-                },
-                visualDensity: const VisualDensity(vertical: -3),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 18),
-              child: ListTile(
-                title: Text(
-                  "Create Appointments",
-                  style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
-                ),
-                leading: Icon(
-                  Icons.event_available,
-                  color: ColorSelect.secondary,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CalendarPage(
-                            clinicName: "",
-                            clinicId: "",
-                            id: "",
-                            startDate: "",
-                            endDate: "",
-                            startTime: "",
-                            endTime: "",
-                            slot: 0,
-                            slotSelector: "",
-                            intervalSelector: "",
-                            numberOfPatients: 0,
-                            byDays: [])),
-                  );
-                },
-                visualDensity: const VisualDensity(vertical: -3),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 18),
-              child: ListTile(
-                title: Text(
-                  "Manage Leaves",
-                  style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
-                ),
-                leading: Icon(
-                  Icons.calendar_month_outlined,
-                  color: ColorSelect.secondary,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LeavePage()),
-                  );
-                },
-                visualDensity: const VisualDensity(vertical: -3),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 18),
-              child: ListTile(
-                title: Text("Manage Appointments",
-                    style:
-                        TextStyle(fontSize: 12, color: ColorSelect.secondary)),
-                leading: Icon(
-                  Icons.book_online_outlined,
-                  color: ColorSelect.secondary,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const BookingHistoryPage()),
-                  );
-                },
-                visualDensity: const VisualDensity(vertical: -3),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 18),
-              child: ListTile(
-                title: Text(
-                  "My Packages",
-                  style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
-                ),
-                leading: Icon(
-                  Icons.currency_pound_outlined,
-                  color: ColorSelect.secondary,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  var future = Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PackagePage()),
-                  );
-                  future.then((value) {
-                    log(value);
-                    getSharedPrefs();
-                  });
-                },
-                visualDensity: VisualDensity(vertical: -3),
-              ),
-            ),
+
+            // ListTile(
+            //   tileColor: ColorSelect.bluegrey50,
+            //   title: Text(
+            //     "My Account Info",
+            //     style: TextStyle(fontSize: 12, color: ColorSelect.secondary),
+            //   ),
+            //   leading: Icon(
+            //     Icons.account_balance_outlined,
+            //     color: ColorSelect.secondary,
+            //   ),
+            //   onTap: () {
+            //     Navigator.of(context).pop();
+            //   },
+            //   visualDensity: const VisualDensity(vertical: -3),
+            // ),
+
             ListTile(
               title: Text("Purchase Packages",
                   style: TextStyle(fontSize: 12, color: ColorSelect.secondary)),
@@ -348,7 +374,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget bodyContainer() {
     Color selectedColor = Colors.white;
     var pagesData = [
-      const BookingsPage(),
+      const BookingHistoryActivity(),
       const Dashboard(),
       const SettingsPage(),
     ];
@@ -414,25 +440,38 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       ),
                     ),
                     const SizedBox(
-                      height: 55.0,
+                      height: 50.0,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         InkWell(
+                          highlightColor: ColorSelect.secondary,
                           onTap: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text(
-                            "No",
-                            style: TextStyle(
-                                fontSize: 15, color: ColorSelect.secondary),
+                          child: Container(
+                            width: 45,
+                            height: 25,
+                            alignment: Alignment.center,
+                            // child: InkWell(
+                            //   highlightColor: ColorSelect.secondary,
+                            //   onTap: () {
+                            //     Navigator.of(context).pop();
+                            //   },
+                            child: Text(
+                              "No",
+                              style: TextStyle(
+                                  fontSize: 15, color: ColorSelect.secondary),
+                            ),
+                            //),
                           ),
                         ),
                         const SizedBox(
-                          width: 40.0,
+                          width: 5.0,
                         ),
                         InkWell(
+                          highlightColor: ColorSelect.secondary,
                           onTap: () async {
                             final prefs = await SharedPreferences.getInstance();
                             prefs.setString('token', "");
@@ -448,10 +487,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                     builder: (context) => const SplashPage()),
                                 (Route<dynamic> route) => route is HomePage);
                           },
-                          child: Text(
-                            "Yes",
-                            style: TextStyle(
-                                fontSize: 15, color: ColorSelect.secondary),
+                          child: Container(
+                            width: 45,
+                            height: 25,
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Yes",
+                              style: TextStyle(
+                                  fontSize: 15, color: ColorSelect.secondary),
+                            ),
                           ),
                         ),
                       ],

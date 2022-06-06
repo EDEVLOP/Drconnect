@@ -40,6 +40,8 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
+    log("DateFormat" + DateTime(2022, 06, 20).toString());
+
     _controller = AnimationController(
         vsync: this,
         duration: Duration(

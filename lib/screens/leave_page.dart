@@ -48,6 +48,7 @@ class _LeavePageState extends State<LeavePage> {
 
   Future? myLeaveList;
   List<LeaveModel> leaveData = [];
+  List<String> leavedays = [];
 
   String startDateTimeUpdated = DateTime.now().toString();
   String endDateTimeUpdated = DateTime.now().toString();
@@ -131,6 +132,47 @@ class _LeavePageState extends State<LeavePage> {
                             initialSelectedRange: PickerDateRange(
                                 DateTime.parse(startDateTimeUpdated),
                                 DateTime.parse(endDateTimeUpdated)),
+
+                            //initialSelectedRanges: leaveData,
+
+                            monthViewSettings: DateRangePickerMonthViewSettings(
+                                blackoutDates: [
+                                  DateTime(2022, 06, 26),
+                                  // DateTime.parse(DateTime.now().toString()),
+                                  DateTime.parse("2022-06-09 01:21:32.915838")
+                                  // DateTime(2022, 06, 27)
+                                ],
+                                weekendDays: const [],
+                                // specialDates: [
+                                //   DateTime(2022, 06,
+                                //       20), // want array of this typ i guess
+                                //   DateTime(2022, 06, 16),
+                                // ],
+
+                                showTrailingAndLeadingDates: true),
+
+                            monthCellStyle: DateRangePickerMonthCellStyle(
+                              blackoutDatesDecoration: BoxDecoration(
+                                  color: Colors.red,
+                                  border: Border.all(
+                                      color: const Color(0xFFF44436), width: 1),
+                                  shape: BoxShape.circle),
+                              weekendDatesDecoration: BoxDecoration(
+                                  color: const Color(0xFFDFDFDF),
+                                  border: Border.all(
+                                      color: const Color(0xFFB6B6B6), width: 1),
+                                  shape: BoxShape.circle),
+                              specialDatesDecoration: BoxDecoration(
+                                  color: Colors.orange,
+                                  border: Border.all(
+                                      color: Colors.orange, width: 1),
+                                  shape: BoxShape.circle),
+                              blackoutDateTextStyle: const TextStyle(
+                                  color: Colors.white,
+                                  decoration: TextDecoration.lineThrough),
+                              specialDatesTextStyle:
+                                  const TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -1002,20 +1044,26 @@ class _LeavePageState extends State<LeavePage> {
       "api-version": "1.0",
       "Authorization": "Bearer " + token
     };
-
     http.Response response =
         await http.get(Uri.parse(Api.fetchLeaveDataApi), headers: header);
-
-    // print("statusCodeLeave: " + response.statusCode.toString());
+    var userLeave = jsonDecode(response.body.toString());
 
     if (response.statusCode == 200) {
-      leaveData = leaveModelFromJson(response.body);
+      for (Map i in userLeave) {
+        var time = i["startDateTime"];
+        var endTime = i["endDateTime"];
 
-      // var str = leaveData.
+        log("TIME " + time + " - " + endDate);
 
+        print(userLeave);
+      }
+      print("000  " + leaveData.toString());
+      // return leaveData;
+      //leaveData = leaveModelFromJson(response.body);
+
+    } else {
+      // return leaveData;
     }
-
-    print(leaveData);
   }
 
   Future _deleteLeaveApi(String id) async {

@@ -1,3 +1,4 @@
+import 'package:doctor_app_connect/screens/leave_page.dart';
 import 'package:doctor_app_connect/screens/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SplashPage(),
+      home: const SplashPage(), // chalibani
     );
   }
 }

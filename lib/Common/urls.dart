@@ -48,4 +48,7 @@ class Api {
   static const putCalendarApi = _baseUrl + '1380/api/Calendar/';
 
   static const dounutChartApi = _baseUrl + '1380/api/Statistics?';
+
+  static const barGraphChartApi =
+      _baseUrl + '1380/api/Statistics/weekly/count?';
 }
