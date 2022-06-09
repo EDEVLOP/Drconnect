@@ -404,11 +404,14 @@ class _CalendarPageState extends State<CalendarPage> {
                                     },
                                   ),
                                 ),
-                                const Text(
-                                  'MONTHLY',
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.bold),
+                                InkWell(
+                                  onTap: _monthlyDialog,
+                                  child: const Text(
+                                    'MONTHLY',
+                                    style: TextStyle(
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ],
                             ),
@@ -686,7 +689,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: SizedBox(
-                height: 140,
+                height: 185,
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -887,6 +890,14 @@ class _CalendarPageState extends State<CalendarPage> {
                         ],
                       ),
                     ),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "OK",
+                          style: TextStyle(fontSize: 14),
+                        )),
                   ],
                 ),
               ),
@@ -1249,6 +1260,7 @@ class _CalendarPageState extends State<CalendarPage> {
         //  final minutes = diff.inMinutes % 60;
         //  log('$hours hours $minutes minutes');
         //     visitingTrayList[index].slotTime = minutes.toString();
+        print("innnnn");
       } else if (end.isAfter(start)) {
         Duration diff = end.difference(start);
         final hours = diff.inHours;

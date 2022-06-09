@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:doctor_app_connect/screens/Calender/calendar_page.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,11 @@ class _BookingHistoryActivityState extends State<BookingHistoryActivity> {
 
   bool isLoading = false;
   Future? myBookingsList;
+
   List<BookingModel> bookingsData = [];
+  List<DateTime> bookdays = [];
+  List<DateTime> bookeddaysDisplay = [];
+
   String startDateTimeUpdated = DateTime.now().toString();
   String endDateTimeUpdated = DateTime.now().toString();
 
@@ -338,10 +343,22 @@ class _BookingHistoryActivityState extends State<BookingHistoryActivity> {
     http.Response response =
         await http.get(Uri.parse(Api.fetchBookingsApi), headers: header);
 
-    // log("statusCode: "+response.statusCode.toString());
-    //  log("dataaa: "+ response.body.toString());
+    bookingsData = bookingModelFromJson(response.body);
+    var userBooking = jsonDecode(response.body.toString());
+    log("Book  " + userBooking.toString());
+
     if (response.statusCode == 200) {
-      bookingsData = bookingModelFromJson(response.body);
+      for (var i in userBooking) {
+        var startTime = i["startDateTime"];
+
+        bookdays.add(DateTime.parse(startTime));
+      }
+      log("BOOKED : " + bookdays.toString());
+
+      setState(() {
+        bookeddaysDisplay = bookdays;
+      });
+      log("BOOKEDDISPLY  : " + bookeddaysDisplay.toString());
     }
   }
 

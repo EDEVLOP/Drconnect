@@ -22,6 +22,9 @@ class TextFieldWithTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    textEditingController!.selection = TextSelection.fromPosition(
+        TextPosition(offset: textEditingController!.text.length));
+
     return Row(
       children: <Widget>[
         Text(

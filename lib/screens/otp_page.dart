@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,7 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
-  OtpFieldController otpController = OtpFieldController();
+  TextEditingController otpController = TextEditingController();
   late AnimationController _controller;
   int levelClock = 120;
   var _isVisibility = true;
@@ -95,26 +96,57 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                   child: SizedBox(
                     height: 50,
                     child: Expanded(
-                      child: OTPTextField(
-                          otpFieldStyle: OtpFieldStyle(
-                              focusBorderColor: ColorSelect.primary, //(here)
-                              enabledBorderColor: ColorSelect.secondary),
-                          controller: otpController,
-                          length: 6,
-                          width: MediaQuery.of(context).size.width,
-                          textFieldAlignment: MainAxisAlignment.spaceAround,
-                          fieldWidth: 50,
-                          fieldStyle: FieldStyle.box,
-                          outlineBorderRadius: 15,
-                          style: const TextStyle(fontSize: 17),
-                          onChanged: (pin) {
-                            log("Changed: " + pin);
-                            otp = pin;
-                          },
-                          onCompleted: (pin) {
-                            log("Completed: " + pin);
-                            otp = pin;
-                          }),
+                      child: PinCodeTextField(
+                        length: 6,
+                        obscureText: false,
+                        animationType: AnimationType.fade,
+                        textStyle: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                        pinTheme: PinTheme(
+                            shape: PinCodeFieldShape.box,
+                            borderRadius: BorderRadius.circular(6),
+                            inactiveColor: ColorSelect.secondary,
+                            selectedColor: ColorSelect.primary,
+                            fieldHeight: 45,
+                            fieldWidth: 40,
+                            borderWidth: 1),
+                        animationDuration: const Duration(milliseconds: 300),
+                        //backgroundColor: Colors.blue.shade50,
+                        //enableActiveFill: true,
+                        controller: otpController,
+                        onCompleted: (pin) {
+                          log("Completed: " + pin);
+                          otp = pin;
+                        },
+                        onChanged: (pin) {
+                          log("Changed: " + pin);
+                          otp = pin;
+                        },
+                        beforeTextPaste: (text) {
+                          return true;
+                        },
+                        appContext: context,
+                      ),
+                      //  OTPTextField(
+                      //     otpFieldStyle: OtpFieldStyle(
+                      //         focusBorderColor: ColorSelect.primary, //(here)
+                      //         enabledBorderColor: ColorSelect.secondary),
+                      //     controller: otpController,
+                      //     length: 6,
+                      //     width: MediaQuery.of(context).size.width,
+                      //     textFieldAlignment: MainAxisAlignment.spaceAround,
+                      //     fieldWidth: 50,
+                      //     fieldStyle: FieldStyle.box,
+                      //     outlineBorderRadius: 15,
+                      //     style: const TextStyle(fontSize: 17),
+                      //     onChanged: (pin) {
+                      //       log("Changed: " + pin);
+                      //       otp = pin;
+                      //     },
+                      //     onCompleted: (pin) {
+                      //       log("Completed: " + pin);
+                      //       otp = pin;
+                      //     }),
                     ),
                   ),
                 ),

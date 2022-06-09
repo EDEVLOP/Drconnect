@@ -48,7 +48,8 @@ class _LeavePageState extends State<LeavePage> {
 
   Future? myLeaveList;
   List<LeaveModel> leaveData = [];
-  List<String> leavedays = [];
+  List<DateTime> leavedays = [];
+  List<DateTime> leavedaysDisplay = [];
 
   String startDateTimeUpdated = DateTime.now().toString();
   String endDateTimeUpdated = DateTime.now().toString();
@@ -130,18 +131,20 @@ class _LeavePageState extends State<LeavePage> {
                             //     ExtendableRangeSelectionDirection.forward
 
                             initialSelectedRange: PickerDateRange(
-                                DateTime.parse(startDateTimeUpdated),
-                                DateTime.parse(endDateTimeUpdated)),
+                                DateTime.parse("2022-06-01 15:47:00.000Z"),
+                                DateTime.parse("2022-06-05 15:47:00.000Z")),
 
                             //initialSelectedRanges: leaveData,
 
                             monthViewSettings: DateRangePickerMonthViewSettings(
-                                blackoutDates: [
-                                  DateTime(2022, 06, 26),
-                                  // DateTime.parse(DateTime.now().toString()),
-                                  DateTime.parse("2022-06-09 01:21:32.915838")
-                                  // DateTime(2022, 06, 27)
-                                ],
+                                blackoutDates: leavedaysDisplay,
+                                // blackoutDates: [
+                                //   DateTime(2022, 06, 26),
+                                //   // DateTime.parse(DateTime.now().toString()),
+                                //   DateTime.parse("2022-05-14T03:15:00+00:00"),
+                                //   DateTime.parse("2022-05-15T03:15:00+00:00")
+                                //   // DateTime(2022, 06, 27)
+                                // ],
                                 weekendDays: const [],
                                 // specialDates: [
                                 //   DateTime(2022, 06,
@@ -1046,23 +1049,25 @@ class _LeavePageState extends State<LeavePage> {
     };
     http.Response response =
         await http.get(Uri.parse(Api.fetchLeaveDataApi), headers: header);
+
+    leaveData = leaveModelFromJson(response.body.toString());
+
     var userLeave = jsonDecode(response.body.toString());
+    log(userLeave.toString());
 
     if (response.statusCode == 200) {
-      for (Map i in userLeave) {
+      for (var i in userLeave) {
         var time = i["startDateTime"];
-        var endTime = i["endDateTime"];
+        //var endTime = i["endDateTime"];
 
-        log("TIME " + time + " - " + endDate);
-
-        print(userLeave);
+        log("TIME " + time);
+        leavedays.add(DateTime.parse(time));
       }
-      print("000  " + leaveData.toString());
-      // return leaveData;
-      //leaveData = leaveModelFromJson(response.body);
+      log("Leaves: " + leavedays.toString());
 
-    } else {
-      // return leaveData;
+      setState(() {
+        leavedaysDisplay = leavedays;
+      });
     }
   }
 

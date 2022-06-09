@@ -8,6 +8,8 @@ import 'package:doctor_app_connect/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
 import 'package:circular_bottom_navigation/tab_item.dart';
+import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
+import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Common/color_select.dart';
 import '../Common/urls.dart';
@@ -32,6 +34,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String name = 'Guest user';
   String phone = '-';
   String image = '';
+  TabController? _tabController;
 
   List<TabItem> tabItems = List.of([
     TabItem(Icons.calendar_month_outlined, "Bookings", ColorSelect.secondary,
