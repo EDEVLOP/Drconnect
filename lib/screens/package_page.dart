@@ -1,9 +1,7 @@
-import 'package:accordion/controllers.dart';
 import 'package:doctor_app_connect/Widgets/drconnect_background.dart';
 import 'package:flutter/material.dart';
 import '../Common/color_select.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:accordion/accordion.dart';
 
 class PackagePage extends StatefulWidget {
   const PackagePage({Key? key}) : super(key: key);
@@ -35,7 +33,7 @@ class PackagePageState extends State<PackagePage> {
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               title: Text(
-                'My Cards',
+                'Subscription &  Add-ons',
                 style: TextStyle(color: ColorSelect.secondary),
               ),
               backgroundColor: Colors.white,
@@ -66,7 +64,7 @@ class PackagePageState extends State<PackagePage> {
                         //   fit: BoxFit.cover,
                         // ),
 
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
                             colors: [
@@ -107,42 +105,51 @@ class PackagePageState extends State<PackagePage> {
                           child: Row(
                             children: [
                               const Text(
-                                'Validity :',
+                                'Validity :  ',
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
-                              RadioButton(
-                                  textStyle: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  activeColor: Colors.limeAccent,
-                                  description: '1 Month',
-                                  value: "1 Month",
-                                  groupValue: month,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      month = value.toString();
-                                    });
-                                  }),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              RadioButton(
-                                textStyle: const TextStyle(
+
+                              const Text(
+                                'One Month ',
+                                style: TextStyle(
+                                  fontSize: 14,
                                   color: Colors.white,
                                 ),
-                                activeColor: Colors.limeAccent,
-                                description: '12 Month',
-                                value: "12 Month",
-                                groupValue: month,
-                                onChanged: (value) {
-                                  setState(() {
-                                    month = value.toString();
-                                  });
-                                },
                               ),
+
+                              // RadioButton(
+                              //     textStyle: const TextStyle(
+                              //       color: Colors.white,
+                              //     ),
+                              //     activeColor: Colors.limeAccent,
+                              //     description: '1 Month',
+                              //     value: "1 Month",
+                              //     groupValue: month,
+                              //     onChanged: (value) {
+                              //       setState(() {
+                              //         month = value.toString();
+                              //       });
+                              //     }),
+                              // const SizedBox(
+                              //   width: 8,
+                              // ),
+                              // RadioButton(
+                              //   textStyle: const TextStyle(
+                              //     color: Colors.white,
+                              //   ),
+                              //   activeColor: Colors.limeAccent,
+                              //   description: '12 Month',
+                              //   value: "12 Month",
+                              //   groupValue: month,
+                              //   onChanged: (value) {
+                              //     setState(() {
+                              //       month = value.toString();
+                              //     });
+                              //   },
+                              // ),
                             ],
                           ),
                         ),
@@ -194,7 +201,7 @@ class PackagePageState extends State<PackagePage> {
                           child: ExpansionTile(
                             expandedCrossAxisAlignment:
                                 CrossAxisAlignment.stretch,
-                            title: Text(
+                            title: const Text(
                               'View more',
                               style: TextStyle(
                                 fontSize: 14,
@@ -214,69 +221,75 @@ class PackagePageState extends State<PackagePage> {
                                   Icons.check_circle_outline_outlined,
                                   color: ColorSelect.primary,
                                 ),
-                                title: Text(
+                                title: const Text(
                                   'Access control IP address whitelisting',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 minVerticalPadding: 3,
                                 horizontalTitleGap: 3,
-                                visualDensity: VisualDensity(vertical: -3),
+                                visualDensity:
+                                    const VisualDensity(vertical: -3),
                               ),
                               ListTile(
                                 leading: Icon(
                                   Icons.check_circle_outline_outlined,
                                   color: ColorSelect.primary,
                                 ),
-                                title: Text(
+                                title: const Text(
                                     'Language customization at a patient level',
                                     style: TextStyle(color: Colors.white)),
                                 minVerticalPadding: 3,
                                 horizontalTitleGap: 3,
-                                visualDensity: VisualDensity(vertical: -3),
+                                visualDensity:
+                                    const VisualDensity(vertical: -3),
                               ),
                               ListTile(
                                 leading: Icon(
                                   Icons.check_circle_outline_outlined,
                                   color: ColorSelect.primary,
                                 ),
-                                title: Text('Advanced reports',
+                                title: const Text('Advanced reports',
                                     style: TextStyle(color: Colors.white)),
                                 minVerticalPadding: 3,
                                 horizontalTitleGap: 3,
-                                visualDensity: VisualDensity(vertical: -3),
+                                visualDensity:
+                                    const VisualDensity(vertical: -3),
                               ),
                               ListTile(
                                 leading: Icon(
                                   Icons.check_circle_outline_outlined,
                                   color: ColorSelect.primary,
                                 ),
-                                title: Text('Unlimited doctors',
+                                title: const Text('Unlimited doctors',
                                     style: TextStyle(color: Colors.white)),
                                 minVerticalPadding: 3,
                                 horizontalTitleGap: 3,
-                                visualDensity: VisualDensity(vertical: -3),
+                                visualDensity:
+                                    const VisualDensity(vertical: -3),
                               ),
                               ListTile(
                                 leading: Icon(
                                   Icons.check_circle_outline_outlined,
                                   color: ColorSelect.primary,
                                 ),
-                                title: Text('Treatment communications',
+                                title: const Text('Treatment communications',
                                     style: TextStyle(color: Colors.white)),
                                 minVerticalPadding: 3,
                                 horizontalTitleGap: 3,
-                                visualDensity: VisualDensity(vertical: -3),
+                                visualDensity:
+                                    const VisualDensity(vertical: -3),
                               ),
                               ListTile(
                                 leading: Icon(
                                   Icons.check_circle_outline_outlined,
                                   color: ColorSelect.primary,
                                 ),
-                                title: Text('1000 Promotional SMSes',
+                                title: const Text('1000 Promotional SMSes',
                                     style: TextStyle(color: Colors.white)),
                                 minVerticalPadding: 3,
                                 horizontalTitleGap: 3,
-                                visualDensity: VisualDensity(vertical: -3),
+                                visualDensity:
+                                    const VisualDensity(vertical: -3),
                               ),
                             ],
                           ),

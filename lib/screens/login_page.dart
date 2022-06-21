@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
     log("DateFormat: " + DateTime.now().toString());
 
     myController.text = "8984147187";
+
     myController.addListener(() {
       if (myController.text.length == 10) {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -64,6 +65,17 @@ class _LoginPageState extends State<LoginPage> {
                       height: 280,
                       width: 280,
                       child: Image.asset('assets/images/logo.png')),
+                  Text(
+                    'We will send you a one time password ' +
+                        'to this mobile number.',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   TextFormField(
                     controller: myController,
                     keyboardType: TextInputType.number,
@@ -115,9 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: ColorSelect.primary,
-                        shape: const StadiumBorder(),
-                      ),
+                          primary: ColorSelect.primary,
+                          shape: const StadiumBorder(),
+                          shadowColor: ColorSelect.blue,
+                          elevation: 6),
                     ),
                   )
                 ],
@@ -156,9 +169,11 @@ class _LoginPageState extends State<LoginPage> {
 
       final prefs = await SharedPreferences.getInstance();
       prefs.setString('userId', jsonResponse);
+      //prefs.setString('number', myController.text);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const OtpPage()),
+        MaterialPageRoute(
+            builder: (context) => OtpPage(phone: myController.text)),
       );
     }
   }

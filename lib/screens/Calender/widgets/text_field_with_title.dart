@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../Common/color_select.dart';
@@ -19,6 +21,7 @@ class TextFieldWithTitle extends StatelessWidget {
   final TextEditingController? textEditingController;
   final Function(String)? onChanged;
   final Function(String)? onSubmit;
+  final bool? ignoreTextField = true;
 
   @override
   Widget build(BuildContext context) {
@@ -37,31 +40,38 @@ class TextFieldWithTitle extends StatelessWidget {
         SizedBox(
           width: width,
           height: height,
-          child: TextField(
-            onChanged: onChanged,
-            controller: textEditingController,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(3),
-            ],
-            keyboardType: TextInputType.number,
-            style: const TextStyle(fontSize: 14.0),
-            onSubmitted: onSubmit,
-            decoration: InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              border: const OutlineInputBorder(),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide(
-                  color: ColorSelect.secondary,
-                  width: 1.0,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
+          child: InkWell(
+            onTap: () {
+              textEditingController!.text = "";
+              //ignoreTextField! = false;
+              log("INSIDE Loop");
+            },
+            child: TextField(
+              onChanged: onChanged,
+              controller: textEditingController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(3),
+              ],
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 14.0),
+              onSubmitted: onSubmit,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide(
-                    color: ColorSelect.primary,
-                  )),
+                    color: ColorSelect.secondary,
+                    width: 1.0,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide(
+                      color: ColorSelect.primary,
+                    )),
+              ),
             ),
           ),
         ),

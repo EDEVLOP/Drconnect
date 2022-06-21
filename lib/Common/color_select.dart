@@ -39,7 +39,7 @@ class ColorSelect {
   static Color grey350 = const Color(0xFFD6D6D6);
   static Color grey400 = const Color(0xFFBDBDBD);
 
-  static Color orange = Color.fromARGB(236, 241, 124, 94);
-  static Color purple = Color.fromARGB(209, 169, 119, 145);
-  static Color blue = Color.fromARGB(255, 144, 158, 193);
+  static Color orange = const Color.fromARGB(236, 241, 124, 94);
+  static Color purple = const Color.fromARGB(209, 169, 119, 145);
+  static Color blue = const Color.fromARGB(255, 144, 158, 193);
 }

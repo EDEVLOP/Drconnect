@@ -8,8 +8,6 @@ import 'package:doctor_app_connect/screens/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:circular_bottom_navigation/circular_bottom_navigation.dart';
 import 'package:circular_bottom_navigation/tab_item.dart';
-import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
-import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Common/color_select.dart';
 import '../Common/urls.dart';
@@ -32,12 +30,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   double bottomNavBarHeight = 60;
   String? token;
   String name = 'Guest user';
-  String phone = '-';
+  String? phone;
   String image = '';
-  TabController? _tabController;
 
   List<TabItem> tabItems = List.of([
-    TabItem(Icons.calendar_month_outlined, "Bookings", ColorSelect.secondary,
+    TabItem(
+        Icons.calendar_month_outlined, "Appointments", ColorSelect.secondary,
         labelStyle: TextStyle(
             color: ColorSelect.secondary,
             fontWeight: FontWeight.bold,
@@ -108,7 +106,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
               accountName: Text(name, style: const TextStyle(fontSize: 14)),
               accountEmail:
-                  Text("+91-" + phone, style: const TextStyle(fontSize: 13)),
+                  Text("+91-" + phone!, style: const TextStyle(fontSize: 13)),
               currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.white,
                   child: image != ''
@@ -268,7 +266,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   margin: const EdgeInsets.only(left: 18),
                   child: ListTile(
                     title: Text(
-                      "My Packages",
+                      "My Subscriptions",
                       style:
                           TextStyle(fontSize: 12, color: ColorSelect.secondary),
                     ),
@@ -288,7 +286,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         getSharedPrefs();
                       });
                     },
-                    visualDensity: VisualDensity(vertical: -3),
+                    visualDensity: const VisualDensity(vertical: -3),
                   ),
                 ),
               ],
@@ -311,7 +309,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             // ),
 
             ListTile(
-              title: Text("Purchase Packages",
+              title: Text("Buy Subscriptions and Add-ons ",
                   style: TextStyle(fontSize: 12, color: ColorSelect.secondary)),
               leading: Icon(
                 Icons.card_membership_rounded,
@@ -320,7 +318,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              visualDensity: VisualDensity(vertical: -3),
+              visualDensity: const VisualDensity(vertical: -3),
+            ),
+
+            ListTile(
+              title: Text("Settings",
+                  style: TextStyle(fontSize: 12, color: ColorSelect.secondary)),
+              leading: Icon(
+                Icons.settings,
+                color: ColorSelect.secondary,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                var future = Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Setting_Page()),
+                );
+              },
+              visualDensity: const VisualDensity(vertical: -3),
             ),
             ListTile(
               title: Text("Help Center",
@@ -332,7 +347,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              visualDensity: VisualDensity(vertical: -3),
+              visualDensity: const VisualDensity(vertical: -3),
             ),
             ListTile(
               title: Text("Privacy Policy",
@@ -344,7 +359,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onTap: () {
                 Navigator.of(context).pop();
               },
-              visualDensity: VisualDensity(vertical: -3),
+              visualDensity: const VisualDensity(vertical: -3),
             ),
             ListTile(
               title: Text("Log Out",
@@ -357,7 +372,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Navigator.of(context).pop();
                 _showLogoutDialog();
               },
-              visualDensity: VisualDensity(vertical: -3),
+              visualDensity: const VisualDensity(vertical: -3),
             ),
           ],
         ),
@@ -379,7 +394,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     var pagesData = [
       const BookingHistoryActivity(),
       const Dashboard(),
-      const SettingsPage(),
+      const Setting_Page(),
     ];
 
     return Container(
@@ -443,7 +458,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       ),
                     ),
                     const SizedBox(
-                      height: 50.0,
+                      height: 35.0,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -534,7 +549,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? '';
     name = prefs.getString('name') ?? 'Guest user';
-    phone = prefs.getString('phone') ?? '-Mobile number';
+    phone = prefs.getString('phone') ?? '';
     image = prefs.getString('image') ?? '';
 
     setState(() {});

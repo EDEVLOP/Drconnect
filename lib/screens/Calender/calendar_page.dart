@@ -78,6 +78,8 @@ class _CalendarPageState extends State<CalendarPage> {
   bool disableRadioFortnightly = false;
   bool disableRadioMonthly = false;
 
+  var textVisibility = false;
+
   var clinicList = <String>[];
 
   List<ClinicModel>? clinicData;
@@ -137,6 +139,8 @@ class _CalendarPageState extends State<CalendarPage> {
     '31',
   ];
   String dropdownvalueDialogDates = '1';
+
+  String? selectedRadioOption;
 
   bool disableDateDropdown = false;
   bool disableDaysDropdown = true;
@@ -352,6 +356,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                         intervalSelection = 1;
                                         interval = "1";
                                         daysTrayVisibility = true;
+                                        textVisibility = false;
                                       });
                                     },
                                   ),
@@ -370,11 +375,12 @@ class _CalendarPageState extends State<CalendarPage> {
                                     activeColor: fortnightlyRadioActiveColor,
                                     onChanged: (val) {
                                       setState(() {
-                                        radioButtonItem = 'WEEKLY';
+                                        radioButtonItem = 'FORTNIGHTLY';
                                         id = 2;
                                         intervalSelection = 2;
                                         interval = "2";
                                         daysTrayVisibility = true;
+                                        textVisibility = false;
                                       });
                                     },
                                   ),
@@ -400,6 +406,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                         _monthlyDialog();
                                         rruleList.clear();
                                         interval = "1";
+                                        textVisibility = false;
                                       });
                                     },
                                   ),
@@ -415,6 +422,22 @@ class _CalendarPageState extends State<CalendarPage> {
                                 ),
                               ],
                             ),
+                          ),
+                          Visibility(
+                            visible: textVisibility,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 4),
+                              padding: EdgeInsets.all(4.0),
+                              alignment: Alignment.bottomLeft,
+                              child: Text(
+                                "* " + selectedRadioOption.toString(),
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0,
                           ),
                           Column(
                             // key: const Key("trays"),
@@ -739,6 +762,11 @@ class _CalendarPageState extends State<CalendarPage> {
                               onChanged: (String? newValue) {
                                 setState(() {
                                   dropdownvalueDialogDates = newValue!;
+
+                                  selectedRadioOption = "Date " +
+                                      dropdownvalueDialogDates +
+                                      " " +
+                                      "Of Every Month";
                                 });
                               },
                             ),
@@ -875,6 +903,12 @@ class _CalendarPageState extends State<CalendarPage> {
                                     selectedMonthlyDropdownValue = "BYDAY="
                                         "${selectedMonthlyDropdownMenu}SU";
                                   }
+
+                                  selectedRadioOption = "The " +
+                                      dropdownvalueMenu +
+                                      " " +
+                                      dropdownvalueDialogDays +
+                                      " Of Every Month";
                                 });
                               },
                             ),
@@ -890,14 +924,25 @@ class _CalendarPageState extends State<CalendarPage> {
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "OK",
-                          style: TextStyle(fontSize: 14),
-                        )),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+
+                        button_Ok();
+                      },
+                      child: Container(
+                          height: 35,
+                          width: 55,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              color: Colors.blue),
+                          child: const Text(
+                            "OK",
+                            style: TextStyle(fontSize: 14, color: Colors.white),
+                          )),
+                    ),
                   ],
                 ),
               ),
@@ -1530,5 +1575,11 @@ class _CalendarPageState extends State<CalendarPage> {
             bottomDisplayText: bottomDisplayText),
       ];
     }
+  }
+
+  void button_Ok() {
+    setState(() {
+      textVisibility = true;
+    });
   }
 }

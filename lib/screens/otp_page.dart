@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:doctor_app_connect/Widgets/drconnect_background.dart';
 import 'package:flutter/material.dart';
-import 'package:otp_text_field/otp_text_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:uuid/uuid.dart';
@@ -14,7 +12,9 @@ import '../Common/urls.dart';
 import 'home_page.dart';
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({Key? key}) : super(key: key);
+  const OtpPage({Key? key, required this.phone}) : super(key: key);
+
+  final String phone;
 
   @override
   State<OtpPage> createState() => _OtpPageState();
@@ -43,6 +43,8 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
 
     log("DateFormat" + DateTime(2022, 06, 20).toString());
 
+    log("PHONE NUM" + '${widget.phone}');
+
     _controller = AnimationController(
         vsync: this,
         duration: Duration(
@@ -69,171 +71,220 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                 const SizedBox(
                   height: 70.0,
                 ),
-                SizedBox(
-                  height: 230,
-                  width: 230,
-                  child: Lottie.asset(
-                    'assets/lottie/doctor1.json',
-                    repeat: true,
-                    reverse: true,
-                    animate: true,
-                    fit: BoxFit.fill,
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(120)),
+                    color: ColorSelect.bluegrey50,
+                    boxShadow: [
+                      BoxShadow(
+                        color: ColorSelect.grey400,
+                        blurRadius: 5.0, // soften the shadow
+                        spreadRadius: 2.0, //extend the shadow
+                        offset: Offset(
+                          8.0, // Move to right 10  horizontally
+                          8.0, // Move to bottom 10 Vertically
+                        ),
+                      )
+                    ],
+                  ),
+                  child: SizedBox(
+                    height: 230,
+                    width: 230,
+                    child: Lottie.asset(
+                      'assets/lottie/otp_verify.json',
+                      repeat: true,
+                      reverse: true,
+                      animate: true,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
                 const SizedBox(
                   height: 30.0,
                 ),
-                const Text(
-                  'Enter 6 digit code',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: SizedBox(
-                    height: 50,
-                    child: Expanded(
-                      child: PinCodeTextField(
-                        length: 6,
-                        obscureText: false,
-                        animationType: AnimationType.fade,
-                        textStyle: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400),
-                        pinTheme: PinTheme(
-                            shape: PinCodeFieldShape.box,
-                            borderRadius: BorderRadius.circular(6),
-                            inactiveColor: ColorSelect.secondary,
-                            selectedColor: ColorSelect.primary,
-                            fieldHeight: 45,
-                            fieldWidth: 40,
-                            borderWidth: 1),
-                        animationDuration: const Duration(milliseconds: 300),
-                        //backgroundColor: Colors.blue.shade50,
-                        //enableActiveFill: true,
-                        controller: otpController,
-                        onCompleted: (pin) {
-                          log("Completed: " + pin);
-                          otp = pin;
-                        },
-                        onChanged: (pin) {
-                          log("Changed: " + pin);
-                          otp = pin;
-                        },
-                        beforeTextPaste: (text) {
-                          return true;
-                        },
-                        appContext: context,
-                      ),
-                      //  OTPTextField(
-                      //     otpFieldStyle: OtpFieldStyle(
-                      //         focusBorderColor: ColorSelect.primary, //(here)
-                      //         enabledBorderColor: ColorSelect.secondary),
-                      //     controller: otpController,
-                      //     length: 6,
-                      //     width: MediaQuery.of(context).size.width,
-                      //     textFieldAlignment: MainAxisAlignment.spaceAround,
-                      //     fieldWidth: 50,
-                      //     fieldStyle: FieldStyle.box,
-                      //     outlineBorderRadius: 15,
-                      //     style: const TextStyle(fontSize: 17),
-                      //     onChanged: (pin) {
-                      //       log("Changed: " + pin);
-                      //       otp = pin;
-                      //     },
-                      //     onCompleted: (pin) {
-                      //       log("Completed: " + pin);
-                      //       otp = pin;
-                      //     }),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  margin: EdgeInsets.only(top: 20),
+                  height: MediaQuery.of(context).size.height / 2,
+                  decoration: BoxDecoration(),
+                  child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 25.0),
-                        child: Countdown(
-                          animation: StepTween(
-                            begin: levelClock, // THIS IS A USER ENTERED NUMBER
-                            end: 0,
-                          ).animate(_controller),
-                          timerVisibility: _isVisibility,
-                          resendOtpVisibility: _resendOtpVisibility,
+                      const Text(
+                        'OTP Verification',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(
+                        height: 3.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Enter 6 digit otp sent to ',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            '${widget.phone}',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        //color: Colors.amber,
+                        decoration: BoxDecoration(
+                            // boxShadow: [
+                            //   //backgr: Colors.white, //background color of box
+                            //   BoxShadow(
+                            //     color: Color.fromARGB(255, 154, 218, 157),
+                            //     blurRadius: 5.0, // soften the shadow
+                            //     spreadRadius: 3.0, //extend the shadow
+                            //     offset: Offset(
+                            //       15.0, // Move to right 10  horizontally
+                            //       15.0, // Move to bottom 10 Vertically
+                            //     ),
+                            //   )
+                            // ],
+                            ),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: PinCodeTextField(
+                          //backgroundColor: Colors.amber,
+                          keyboardType: TextInputType.number,
+                          length: 6,
+                          obscureText: false,
+                          animationType: AnimationType.fade,
+                          textStyle: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400),
+                          pinTheme: PinTheme(
+                              shape: PinCodeFieldShape.box,
+                              borderRadius: BorderRadius.circular(6),
+                              inactiveColor: ColorSelect.secondary,
+                              selectedColor: ColorSelect.primary,
+                              fieldHeight: 45,
+                              fieldWidth: 40,
+                              borderWidth: 1),
+                          animationDuration: const Duration(milliseconds: 300),
+                          //backgroundColor: Colors.blue.shade50,
+                          //enableActiveFill: true,
+                          controller: otpController,
+                          onCompleted: (pin) {
+                            log("Completed: " + pin);
+                            otp = pin;
+                          },
+                          onChanged: (pin) {
+                            log("Changed: " + pin);
+                            otp = pin;
+                          },
+                          beforeTextPaste: (text) {
+                            return true;
+                          },
+                          appContext: context,
                         ),
                       ),
-                      Padding(
-                          padding: const EdgeInsets.only(right: 25.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text("OTP Resend"),
-                              ));
-
-                              _controller = AnimationController(
-                                  vsync: this,
-                                  duration: Duration(
-                                      seconds:
-                                          levelClock) // gameData.levelClock is a user entered number elsewhere in the applciation
-                                  );
-
-                              _controller.forward();
-
-                              setState(() {
-                                _isVisibility = true;
-                                _resendOtpVisibility = false;
-                              });
-                            },
-                            child: Visibility(
-                              visible: _resendOtpVisibility,
-                              child: Text(
-                                'Resend OTP',
-                                style: TextStyle(
-                                    fontSize: 12, color: ColorSelect.primary),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 25.0),
+                              child: Countdown(
+                                animation: StepTween(
+                                  begin:
+                                      levelClock, // THIS IS A USER ENTERED NUMBER
+                                  end: 0,
+                                ).animate(_controller),
+                                timerVisibility: _isVisibility,
+                                resendOtpVisibility: _resendOtpVisibility,
                               ),
                             ),
-                          ))
-                    ]),
-                const SizedBox(
-                  height: 40.0,
-                ),
-                SizedBox(
-                  height: 40.0,
-                  width: 200.0,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (otp == "") {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("Please enter Otp"),
-                        ));
-                      } else if (otp.length < 6) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text("Please enter full Otp"),
-                        ));
-                      } else {
-                        callOtpApi();
-                      }
-                    },
-                    child: const Text(
-                      'VERIFY',
-                      style: TextStyle(
-                        fontSize: 15,
+                            Padding(
+                                padding: const EdgeInsets.only(right: 25.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text("OTP Resend"),
+                                    ));
+
+                                    _controller = AnimationController(
+                                        vsync: this,
+                                        duration: Duration(
+                                            seconds:
+                                                levelClock) // gameData.levelClock is a user entered number elsewhere in the applciation
+                                        );
+
+                                    _controller.forward();
+
+                                    setState(() {
+                                      _isVisibility = true;
+                                      _resendOtpVisibility = false;
+                                    });
+                                  },
+                                  child: Visibility(
+                                    visible: _resendOtpVisibility,
+                                    child: Text(
+                                      'Resend OTP',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: ColorSelect.primary),
+                                    ),
+                                  ),
+                                ))
+                          ]),
+                      const SizedBox(
+                        height: 40.0,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: ColorSelect.primary,
-                      shape: const StadiumBorder(),
-                    ),
+                      SizedBox(
+                        height: 40.0,
+                        width: 200.0,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (otp == "") {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Please enter Otp"),
+                              ));
+                            } else if (otp.length < 6) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Please enter full Otp"),
+                              ));
+                            } else {
+                              callOtpApi();
+                            }
+                          },
+                          child: const Text(
+                            'VERIFY',
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              primary: ColorSelect.primary,
+                              shape: const StadiumBorder(),
+                              shadowColor: ColorSelect.blue,
+                              elevation: 6),
+                        ),
+                      ),
+                    ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -296,7 +347,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
       /// Save data to shared preff
       prefs.setString('token', token);
       prefs.setString('name', "Guest ");
-      prefs.setString('phone', "-Mobile number");
+      prefs.setString('phone', '${widget.phone}');
       prefs.setString('image', "");
       prefs.setString('isRegistered', isRegistered);
       prefs.setString('experience', "Experience");
@@ -358,7 +409,9 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
 }
 
 class Countdown extends AnimatedWidget {
+  // ignore: prefer_typing_uninitialized_variables
   var timerVisibility;
+  // ignore: prefer_typing_uninitialized_variables
   var resendOtpVisibility;
 
   Countdown(

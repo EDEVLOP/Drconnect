@@ -41,11 +41,11 @@ class DashboardState extends State<Dashboard> {
   bool isLoading = true;
 
   //...............Calendar............................//
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
 
   Map<CalendarFormat, String> availableCalendarFormats = const {
-    //CalendarFormat.month: 'Month',
-    //CalendarFormat.twoWeeks: '2 weeks',
+    CalendarFormat.month: 'Month',
+    CalendarFormat.twoWeeks: '2 weeks',
     CalendarFormat.week: 'Week'
   };
 
@@ -61,6 +61,9 @@ class DashboardState extends State<Dashboard> {
   List<String> specialization = [];
   String experience = '';
   String profileImage = '';
+
+  bool pageJumpingEnabled = false;
+  bool pageAnimationEnable = false;
 
   List weekList = [];
 
@@ -207,6 +210,8 @@ class DashboardState extends State<Dashboard> {
                                       // ),
                                     ),
                             ),
+
+                            //...............USER INFO............................//
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -243,122 +248,181 @@ class DashboardState extends State<Dashboard> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Expanded(
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: <Widget>[
-                                SfCircularChart(
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<ChartData, String>(
-                                      dataSource: chartData,
-                                      pointColorMapper: (ChartData data, _) =>
-                                          data.color,
-                                      xValueMapper: (ChartData data, _) =>
-                                          data.x,
-                                      yValueMapper: (ChartData data, _) =>
-                                          data.y,
-                                      startAngle:
-                                          230, // Starting angle of doughnut
-                                      endAngle: 130,
+                            child: Container(
+                              margin: EdgeInsets.only(top: 12, left: 12),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                color: Color.fromARGB(46, 114, 241, 171),
+                                //color: ColorSelect.grey200,
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     color: ColorSelect.grey400,
+                                //     blurRadius: 5.0, // soften the shadow
+                                //     spreadRadius: 2.0, //extend the shadow
+                                //     offset: Offset(
+                                //       3.0, // Move to right 10  horizontally
+                                //       3.0, // Move to bottom 10 Vertically
+                                //     ),
+                                //   )
+                                // ],
+                              ),
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: <Widget>[
+                                  SfCircularChart(
+                                    series: <CircularSeries>[
+                                      DoughnutSeries<ChartData, String>(
+                                        dataSource: chartData,
+                                        pointColorMapper: (ChartData data, _) =>
+                                            data.color,
+                                        xValueMapper: (ChartData data, _) =>
+                                            data.x,
+                                        yValueMapper: (ChartData data, _) =>
+                                            data.y,
+                                        startAngle:
+                                            230, // Starting angle of doughnut
+                                        endAngle: 130,
 
-                                      // Ending angle of doughnut
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  height: 45,
-                                  margin: const EdgeInsets.only(bottom: 10.0),
-                                  alignment: Alignment.center,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        totalData.toString(),
-                                        style: TextStyle(fontSize: 18),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                      SizedBox(
-                                        height: 3.0,
-                                      ),
-                                      const Text(
-                                        "Today's Appointments",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                        ),
-                                        textAlign: TextAlign.right,
-                                      ),
+                                        // Ending angle of doughnut
+                                      )
                                     ],
                                   ),
-                                ),
-                                Container(
-                                  height: 20,
-                                  margin: const EdgeInsets.only(bottom: 70.0),
-                                  alignment: Alignment.center,
-                                  //color: ColorSelect.grey200,
-                                  child: Text(
-                                    bookedData.toString(),
-                                    style: TextStyle(fontSize: 18),
-                                    textAlign: TextAlign.right,
+                                  Container(
+                                    height: 80,
+                                    //color: Colors.grey,
+                                    margin: const EdgeInsets.only(bottom: 20.0),
+                                    alignment: Alignment.center,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "___",
+                                          style: TextStyle(fontSize: 18),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        Text(
+                                          totalData.toString(),
+                                          style: TextStyle(fontSize: 15),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        SizedBox(
+                                          height: 13.9,
+                                        ),
+                                        const Text(
+                                          "Today's Appointments",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    height: 20,
+                                    margin: const EdgeInsets.only(bottom: 80.0),
+                                    alignment: Alignment.center,
+                                    // color: ColorSelect.grey200,
+                                    child: Text(
+                                      bookedData.toString(),
+                                      style: TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             // ),
                           ),
                           Expanded(
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: <Widget>[
-                                SfCircularChart(
-                                  series: <CircularSeries>[
-                                    DoughnutSeries<MonthlyChartData, String>(
-                                      dataSource: monthlyChartData,
-                                      pointColorMapper:
-                                          (MonthlyChartData data, _) =>
-                                              data.color,
-                                      xValueMapper:
-                                          (MonthlyChartData data, _) => data.x,
-                                      yValueMapper:
-                                          (MonthlyChartData data, _) => data.y,
-                                      startAngle:
-                                          230, // Starting angle of doughnut
-                                      endAngle: 130, // Ending angle of doughnut
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  height: 45,
-                                  margin: const EdgeInsets.only(bottom: 10.0),
-                                  alignment: Alignment.center,
-                                  //color: ColorSelect.grey200,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        monthTotal.toString(),
-                                        style: TextStyle(fontSize: 18),
-                                        textAlign: TextAlign.right,
-                                      ),
-                                      SizedBox(
-                                        height: 3.0,
-                                      ),
-                                      const Text(
-                                        "Monthly Appointments",
-                                        style: TextStyle(fontSize: 15),
-                                        textAlign: TextAlign.right,
-                                      ),
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(top: 12, right: 12, left: 12),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                color: Color.fromARGB(45, 229, 187, 110),
+                                //color: ColorSelect.grey200,
+                                // boxShadow: [
+
+                                //   BoxShadow(
+
+                                //     color: ColorSelect.grey400,
+                                //     blurRadius: 5.0, // soften the shadow
+                                //     spreadRadius: 2.0, //extend the shadow
+                                //     offset: Offset(
+                                //       3.0, // Move to right 10  horizontally
+                                //       3.0, // Move to bottom 10 Vertically
+                                //     ),
+                                //   )
+                                // ],
+                              ),
+                              child: Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: <Widget>[
+                                  SfCircularChart(
+                                    series: <CircularSeries>[
+                                      DoughnutSeries<MonthlyChartData, String>(
+                                        dataSource: monthlyChartData,
+                                        pointColorMapper:
+                                            (MonthlyChartData data, _) =>
+                                                data.color,
+                                        xValueMapper:
+                                            (MonthlyChartData data, _) =>
+                                                data.x,
+                                        yValueMapper:
+                                            (MonthlyChartData data, _) =>
+                                                data.y,
+                                        startAngle:
+                                            230, // Starting angle of doughnut
+                                        endAngle:
+                                            130, // Ending angle of doughnut
+                                      )
                                     ],
                                   ),
-                                ),
-                                Container(
-                                  height: 20,
-                                  margin: const EdgeInsets.only(bottom: 70.0),
-                                  alignment: Alignment.center,
-                                  //color: ColorSelect.grey200,
-                                  child: Text(
-                                    monthBooked.toString(),
-                                    style: TextStyle(fontSize: 18),
-                                    textAlign: TextAlign.right,
+                                  Container(
+                                    height: 80,
+                                    margin: const EdgeInsets.only(bottom: 20.0),
+                                    alignment: Alignment.center,
+                                    //color: ColorSelect.grey200,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "___",
+                                          style: TextStyle(fontSize: 18),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        Text(
+                                          monthTotal.toString(),
+                                          style: TextStyle(fontSize: 15),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                        SizedBox(
+                                          height: 13.9,
+                                        ),
+                                        const Text(
+                                          "Monthly Appointments",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    height: 20,
+                                    margin: const EdgeInsets.only(bottom: 80.0),
+                                    alignment: Alignment.center,
+                                    //color: ColorSelect.grey200,
+                                    child: Text(
+                                      monthBooked.toString(),
+                                      style: TextStyle(fontSize: 16),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -466,6 +530,7 @@ class DashboardState extends State<Dashboard> {
                         firstDay: DateTime.utc(2010, 10, 16),
                         lastDay: DateTime.utc(2030, 3, 14),
                         focusedDay: DateTime.now(),
+                        availableGestures: AvailableGestures.horizontalSwipe,
 
                         calendarStyle: const CalendarStyle(
                           // Use `CalendarStyle` to customize the UI
@@ -486,6 +551,8 @@ class DashboardState extends State<Dashboard> {
                         // rangeStartDay: _rangeStart,
                         // rangeEndDay: _rangeEnd,
                         calendarFormat: _calendarFormat,
+                        pageJumpingEnabled: false,
+                        pageAnimationEnabled: false,
 
                         //rangeSelectionMode: _rangeSelectionMode,
                         onDaySelected: (selectedDay, focusedDay) {
@@ -541,7 +608,7 @@ class DashboardState extends State<Dashboard> {
                       ),
                     ),
                     Container(
-                      height: 250,
+                      height: 320,
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                       child: FutureBuilder(

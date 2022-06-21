@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:doctor_app_connect/Widgets/drconnect_background.dart';
-import 'package:doctor_app_connect/screens/dashboard.dart';
 import 'package:doctor_app_connect/screens/home_page.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
@@ -35,6 +34,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   String? token;
   String? isRegistered;
+  String? number;
 
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -43,9 +43,10 @@ class ProfilePageState extends State<ProfilePage> {
   final phoneController = TextEditingController();
   final yearController = TextEditingController();
   final emailController = TextEditingController();
+  final aboutController = TextEditingController();
   final addressLineOneController = TextEditingController();
   final addressLineTwoController = TextEditingController();
-  final addressLineThreeController = TextEditingController();
+  final addressLandmarkController = TextEditingController();
   final pincodeController = TextEditingController();
   final locationController = TextEditingController();
   final stateController = TextEditingController();
@@ -83,7 +84,8 @@ class ProfilePageState extends State<ProfilePage> {
   var departmentList = [];
   bool isLoading = true;
   bool enableTextFieldPhone = true;
-  bool enableTextFieldcountry = true;
+  bool enableTextFieldcountry = false;
+  bool enableTextFieldstate = true;
 
   @override
   void initState() {
@@ -105,7 +107,7 @@ class ProfilePageState extends State<ProfilePage> {
     emailController.dispose();
     addressLineOneController.dispose();
     addressLineTwoController.dispose();
-    addressLineThreeController.dispose();
+    addressLandmarkController.dispose();
     pincodeController.dispose();
     locationController.dispose();
     stateController.dispose();
@@ -127,7 +129,7 @@ class ProfilePageState extends State<ProfilePage> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    HomePage()), // this mymainpage is your page to refresh
+                    const HomePage()), // this mymainpage is your page to refresh
             (Route<dynamic> route) => false,
           );
 
@@ -261,7 +263,21 @@ class ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           const SizedBox(
-                            height: 40.0,
+                            height: 20.0,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 12, bottom: 25),
+                            width: MediaQuery.of(context).size.width,
+                            color: ColorSelect.secondary,
+                            height: 40,
+                            child: const Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                "Personal Details",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ),
                           ),
                           Padding(
                             padding:
@@ -498,8 +514,8 @@ class ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: ColorSelect.secondary)),
+                                    borderSide:
+                                        BorderSide(color: ColorSelect.primary)),
                                 hintStyle: const TextStyle(
                                     fontSize: 16, color: Colors.grey),
                                 border: const OutlineInputBorder(),
@@ -804,6 +820,44 @@ class ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 8),
+                            child: TextFormField(
+                              controller: aboutController,
+                              //  focusNode: expeFn,
+                              // onChanged: (_) {s
+                              //   _formKey.currentState!.validate();
+                              // },
+                              // validator: (text) {
+                              //   if (text == null || text.isEmpty) {
+                              //     // expeFn.requestFocus();
+                              //     return 'Experience is empty';
+                              //   } else if (int.parse(text) > 50) {
+                              //     return 'Experience cannot be more than 50 yrs';
+                              //   } else {
+                              //     return null;
+                              //   }
+                              // },
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              decoration: InputDecoration(
+                                labelText: 'About Doctor',
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: ColorSelect.secondary,
+                                    width: 1.0,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: ColorSelect.primary)),
+                                hintStyle: const TextStyle(
+                                    fontSize: 16, color: Colors.grey),
+                                border: const OutlineInputBorder(),
+                              ),
+                            ),
+                          ),
                           Container(
                             margin: const EdgeInsets.only(top: 12, bottom: 12),
                             width: MediaQuery.of(context).size.width,
@@ -812,7 +866,7 @@ class ProfilePageState extends State<ProfilePage> {
                             child: const Padding(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                "Personal Details",
+                                "Address Details",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),
@@ -908,7 +962,7 @@ class ProfilePageState extends State<ProfilePage> {
                                 horizontal: 12.0, vertical: 8),
                             child: TextFormField(
                               // focusNode: line3Fn,
-                              controller: addressLineThreeController,
+                              controller: addressLandmarkController,
                               keyboardType: TextInputType.text,
                               // onChanged: (_) {
                               //   _formKey.currentState!.validate();
@@ -921,7 +975,7 @@ class ProfilePageState extends State<ProfilePage> {
                               //   return null;
                               // },
                               decoration: InputDecoration(
-                                labelText: 'Line 3',
+                                labelText: 'Landmark',
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: ColorSelect.secondary,
@@ -1048,6 +1102,7 @@ class ProfilePageState extends State<ProfilePage> {
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 5),
                                     child: TextFormField(
+                                      enabled: enableTextFieldstate,
                                       //   focusNode: stateFn,
                                       controller: stateController,
                                       // onChanged: (_) {
@@ -1484,8 +1539,7 @@ class ProfilePageState extends State<ProfilePage> {
       if (jsonResponse['address'] != null) {
         addressLineOneController.text = jsonResponse['address']['line1'] ?? '';
         addressLineTwoController.text = jsonResponse['address']['line2'] ?? '';
-        addressLineThreeController.text =
-            jsonResponse['address']['line3'] ?? '';
+        addressLandmarkController.text = jsonResponse['address']['line3'] ?? '';
         locationController.text = jsonResponse['address']['city'] ?? '';
         stateController.text = jsonResponse['address']['state'] ?? '';
         countryController.text = jsonResponse['address']['country'] ?? '';
@@ -1503,6 +1557,7 @@ class ProfilePageState extends State<ProfilePage> {
         isLoading = false;
         enableTextFieldPhone = false;
         enableTextFieldcountry = false;
+        enableTextFieldstate = false;
       });
 
       // final prefs = await SharedPreferences.getInstance();
@@ -1575,7 +1630,7 @@ class ProfilePageState extends State<ProfilePage> {
       "address": {
         "line1": addressLineOneController.text,
         "line2": addressLineTwoController.text,
-        "line3": addressLineThreeController.text,
+        "line3": addressLandmarkController.text,
         "city": locationController.text,
         "state": stateController.text,
         "country": countryController.text,
@@ -1623,8 +1678,8 @@ class ProfilePageState extends State<ProfilePage> {
       ));
     }
     final prefsf = await SharedPreferences.getInstance();
-    String EX = prefsf.getString('experience').toString();
-    log('MES  ' + EX);
+    String ex = prefsf.getString('experience').toString();
+    log('MES  ' + ex);
   }
 
   Future<void> apiFetchParallel() async {
@@ -1635,7 +1690,7 @@ class ProfilePageState extends State<ProfilePage> {
         setState(() {
           _myMci = null;
           isLoading = false;
-          enableTextFieldPhone = true;
+          //enableTextFieldPhone = true;
         });
       } else {
         getUserProfile();
@@ -1669,6 +1724,12 @@ class ProfilePageState extends State<ProfilePage> {
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? '';
     isRegistered = prefs.getString('isRegistered') ?? '';
+    number = prefs.getString('phone') ?? '';
     log('Response essage' + prefs.getString('experience').toString());
+
+    setState(() {
+      phoneController.text = number.toString();
+      enableTextFieldPhone = false;
+    });
   }
 }
