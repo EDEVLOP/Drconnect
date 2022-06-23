@@ -43,7 +43,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
 
     log("DateFormat" + DateTime(2022, 06, 20).toString());
 
-    log("PHONE NUM" + '${widget.phone}');
+    log("PHONE NUM " + widget.phone);
 
     _controller = AnimationController(
         vsync: this,
@@ -61,7 +61,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
         child: Scaffold(
       backgroundColor: Colors.transparent,
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
@@ -72,16 +72,16 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                   height: 70.0,
                 ),
                 Container(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(120)),
+                    borderRadius: const BorderRadius.all(Radius.circular(120)),
                     color: ColorSelect.bluegrey50,
                     boxShadow: [
                       BoxShadow(
                         color: ColorSelect.grey400,
                         blurRadius: 5.0, // soften the shadow
                         spreadRadius: 2.0, //extend the shadow
-                        offset: Offset(
+                        offset: const Offset(
                           8.0, // Move to right 10  horizontally
                           8.0, // Move to bottom 10 Vertically
                         ),
@@ -89,8 +89,8 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                     ],
                   ),
                   child: SizedBox(
-                    height: 230,
-                    width: 230,
+                    height: 200,
+                    width: 200,
                     child: Lottie.asset(
                       'assets/lottie/otp_verify.json',
                       repeat: true,
@@ -104,9 +104,9 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                   height: 30.0,
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 20),
                   height: MediaQuery.of(context).size.height / 2,
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   child: Column(
                     children: [
                       const Text(
@@ -122,7 +122,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Enter 6 digit otp sent to ',
                             style: TextStyle(
                               color: Colors.black,
@@ -130,8 +130,8 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                             ),
                           ),
                           Text(
-                            '${widget.phone}',
-                            style: TextStyle(
+                            widget.phone,
+                            style: const TextStyle(
                               color: Colors.blue,
                               fontWeight: FontWeight.w500,
                               fontSize: 15,
@@ -146,7 +146,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
                         width: MediaQuery.of(context).size.width,
                         height: 50,
                         //color: Colors.amber,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             // boxShadow: [
                             //   //backgr: Colors.white, //background color of box
                             //   BoxShadow(
@@ -347,7 +347,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
       /// Save data to shared preff
       prefs.setString('token', token);
       prefs.setString('name', "Guest ");
-      prefs.setString('phone', '${widget.phone}');
+      prefs.setString('phone', widget.phone);
       prefs.setString('image', "");
       prefs.setString('isRegistered', isRegistered);
       prefs.setString('experience', "Experience");
@@ -408,6 +408,7 @@ class _OtpPageState extends State<OtpPage> with TickerProviderStateMixin {
   }
 }
 
+// ignore: must_be_immutable
 class Countdown extends AnimatedWidget {
   // ignore: prefer_typing_uninitialized_variables
   var timerVisibility;

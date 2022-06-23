@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Setting_Page extends StatefulWidget {
-  const Setting_Page({Key? key}) : super(key: key);
+class SettingPage extends StatefulWidget {
+  const SettingPage({Key? key}) : super(key: key);
 
   @override
-  State<Setting_Page> createState() => Setting_PageState();
+  State<SettingPage> createState() => SettingPageState();
 }
 
-class Setting_PageState extends State<Setting_Page> {
+class SettingPageState extends State<SettingPage> {
   final changePhoneNumber = TextEditingController();
 
+  // ignore: non_constant_identifier_names
   String? phone_no;
 
   @override
@@ -37,10 +38,10 @@ class Setting_PageState extends State<Setting_Page> {
           iconTheme: IconThemeData(color: ColorSelect.secondary),
         ),
         body: Container(
-          margin: EdgeInsets.fromLTRB(12, 10, 12, 10),
+          margin: const EdgeInsets.fromLTRB(12, 10, 12, 10),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
+            const Text(
               "Change your Number",
               style: TextStyle(
                 fontSize: 15,
@@ -94,7 +95,7 @@ class Setting_PageState extends State<Setting_Page> {
             ),
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 30),
+                margin: const EdgeInsets.only(top: 30),
                 child: SizedBox(
                   width: 180,
                   height: 40,

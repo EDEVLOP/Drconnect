@@ -332,7 +332,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 Navigator.of(context).pop();
                 var future = Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Setting_Page()),
+                  MaterialPageRoute(builder: (context) => const SettingPage()),
                 );
               },
               visualDensity: const VisualDensity(vertical: -3),
@@ -394,7 +394,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     var pagesData = [
       const BookingHistoryActivity(),
       const Dashboard(),
-      const Setting_Page(),
+      const SettingPage(),
     ];
 
     return Container(

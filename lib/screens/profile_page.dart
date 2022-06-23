@@ -123,7 +123,7 @@ class ProfilePageState extends State<ProfilePage> {
 
     return WillPopScope(
         onWillPop: () {
-          log('message' + '1');
+          log('message 1');
           getSharedPrefs();
           Navigator.pushAndRemoveUntil(
             context,
@@ -1720,7 +1720,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> getSharedPrefs() async {
-    log('message' + '2');
+    log('message 2');
     final prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? '';
     isRegistered = prefs.getString('isRegistered') ?? '';

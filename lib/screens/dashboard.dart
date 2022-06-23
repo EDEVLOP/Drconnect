@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:developer';
-import 'dart:ffi';
 import 'package:doctor_app_connect/Common/urls.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:doctor_app_connect/Widgets/drconnect_background.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import '../Common/color_select.dart';
@@ -37,7 +35,7 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard> {
   late Future<List<Data>> futureData;
   // final CalendarController _controller = CalendarController();
-  String? _text = '', _titleText = '';
+  // String? _text = '', _titleText = '';
   bool isLoading = true;
 
   //...............Calendar............................//
@@ -49,10 +47,10 @@ class DashboardState extends State<Dashboard> {
     CalendarFormat.week: 'Week'
   };
 
-  DateTime _focusedDay = DateTime.now();
+  // DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
+  //DateTime? _rangeStart;
+  // DateTime? _rangeEnd;
   DateTime? currentDay;
 
   String today = DateFormat("yyyy-MM-dd").format(DateTime.now());
@@ -88,7 +86,7 @@ class DashboardState extends State<Dashboard> {
   List<ChartData1> barData = [
     ChartData1('Mon', 0, ColorSelect.blueShade800),
     ChartData1('Tue', 0, ColorSelect.blueShade800),
-    ChartData1('Wed', 0, Color.fromARGB(255, 236, 105, 44)),
+    ChartData1('Wed', 0, const Color.fromARGB(255, 236, 105, 44)),
     ChartData1('Thur', 0, ColorSelect.blueShade800),
     ChartData1('Fri', 0, ColorSelect.blueShade800),
     ChartData1('Sat', 0, ColorSelect.blueShade800),
@@ -99,7 +97,7 @@ class DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 5)).then((value) {
+    Future.delayed(const Duration(seconds: 5)).then((value) {
       setState(() {
         isLoading = false;
       });
@@ -117,36 +115,36 @@ class DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     //log("enter " + bookedData.toString());
 
-    void calendarTapped(CalendarTapDetails details) {
-      if (details.targetElement == CalendarElement.header) {
-        _text = DateFormat('MMMM yyyy').format(details.date!);
-        _titleText = 'Header';
-      } else if (details.targetElement == CalendarElement.viewHeader) {
-        _text = DateFormat('EEEE dd, MMMM yyyy').format(details.date!);
-        _titleText = 'View Header';
-      } else if (details.targetElement == CalendarElement.calendarCell) {
-        _text = DateFormat('dd-MM-yyyy').format(details.date!);
-        _titleText = 'Calendar cell';
-      }
+    // void calendarTapped(CalendarTapDetails details) {
+    //   if (details.targetElement == CalendarElement.header) {
+    //     _text = DateFormat('MMMM yyyy').format(details.date!);
+    //     _titleText = 'Header';
+    //   } else if (details.targetElement == CalendarElement.viewHeader) {
+    //     _text = DateFormat('EEEE dd, MMMM yyyy').format(details.date!);
+    //     _titleText = 'View Header';
+    //   } else if (details.targetElement == CalendarElement.calendarCell) {
+    //     _text = DateFormat('dd-MM-yyyy').format(details.date!);
+    //     _titleText = 'Calendar cell';
+    //   }
 
-      //print(" $_text");
+    //   //print(" $_text");
 
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(" $_titleText"),
-              content: Text(" $_text"),
-              actions: <Widget>[
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('close'))
-              ],
-            );
-          });
-    }
+    //   showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) {
+    //         return AlertDialog(
+    //           title: Text(" $_titleText"),
+    //           content: Text(" $_text"),
+    //           actions: <Widget>[
+    //             TextButton(
+    //                 onPressed: () {
+    //                   Navigator.of(context).pop();
+    //                 },
+    //                 child: const Text('close'))
+    //           ],
+    //         );
+    //       });
+    // }
 
     return DrConnectBackground(
       child: Scaffold(
@@ -166,7 +164,7 @@ class DashboardState extends State<Dashboard> {
                           child: Container(
                               height: 100,
                               width: MediaQuery.of(context).size.width,
-                              margin: EdgeInsets.all(8.0),
+                              margin: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6.0),
                                   color: ColorSelect.grey200),
@@ -243,29 +241,18 @@ class DashboardState extends State<Dashboard> {
                           ]),
                     ),
                     SizedBox(
-                      height: 160,
+                      height: 180,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(top: 12, left: 12),
-                              decoration: BoxDecoration(
+                              margin: const EdgeInsets.only(
+                                  top: 12, right: 12, left: 8),
+                              decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
-                                color: Color.fromARGB(46, 114, 241, 171),
-                                //color: ColorSelect.grey200,
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //     color: ColorSelect.grey400,
-                                //     blurRadius: 5.0, // soften the shadow
-                                //     spreadRadius: 2.0, //extend the shadow
-                                //     offset: Offset(
-                                //       3.0, // Move to right 10  horizontally
-                                //       3.0, // Move to bottom 10 Vertically
-                                //     ),
-                                //   )
-                                // ],
+                                color: Color.fromARGB(82, 114, 241, 171),
                               ),
                               child: Stack(
                                 alignment: Alignment.bottomCenter,
@@ -289,73 +276,127 @@ class DashboardState extends State<Dashboard> {
                                     ],
                                   ),
                                   Container(
-                                    height: 80,
-                                    //color: Colors.grey,
+                                    height: 85,
                                     margin: const EdgeInsets.only(bottom: 20.0),
                                     alignment: Alignment.center,
+                                    //color: ColorSelect.grey200,
                                     child: Column(
                                       children: [
                                         Text(
-                                          "___",
-                                          style: TextStyle(fontSize: 18),
+                                          bookedData.toString(),
+                                          style: const TextStyle(fontSize: 16),
                                           textAlign: TextAlign.right,
+                                        ),
+                                        const Divider(
+                                          height: 10,
+                                          color: Colors.black,
+                                          indent: 70,
+                                          endIndent: 70,
                                         ),
                                         Text(
                                           totalData.toString(),
-                                          style: TextStyle(fontSize: 15),
+                                          style: const TextStyle(fontSize: 15),
                                           textAlign: TextAlign.right,
                                         ),
-                                        SizedBox(
-                                          height: 13.9,
+                                        const SizedBox(
+                                          height: 10,
                                         ),
-                                        const Text(
-                                          "Today's Appointments",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600),
-                                          textAlign: TextAlign.right,
+                                        const Padding(
+                                          padding: EdgeInsets.all(1.0),
+                                          child: Text(
+                                            "Today's Appointments",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.right,
+                                          ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    margin: const EdgeInsets.only(bottom: 80.0),
-                                    alignment: Alignment.center,
-                                    // color: ColorSelect.grey200,
-                                    child: Text(
-                                      bookedData.toString(),
-                                      style: TextStyle(fontSize: 16),
-                                      textAlign: TextAlign.right,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            // ),
                           ),
+                          // Expanded(
+                          //   child: Container(
+                          //     margin:
+                          //         EdgeInsets.only(top: 12, right: 8, left: 12),
+                          //     decoration: BoxDecoration(
+                          //       borderRadius:
+                          //           BorderRadius.all(Radius.circular(8)),
+                          //       color: Color.fromARGB(82, 114, 241, 171),
+                          //     ),
+                          //     child: Column(children: [
+                          //       Stack(
+                          //         alignment: Alignment.bottomCenter,
+                          //         children: <Widget>[
+                          //           SfCircularChart(
+                          //             series: <CircularSeries>[
+                          //               DoughnutSeries<ChartData, String>(
+                          //                 dataSource: chartData,
+                          //                 pointColorMapper:
+                          //                     (ChartData data, _) => data.color,
+                          //                 xValueMapper: (ChartData data, _) =>
+                          //                     data.x,
+                          //                 yValueMapper: (ChartData data, _) =>
+                          //                     data.y,
+                          //                 startAngle:
+                          //                     230, // Starting angle of doughnut
+                          //                 endAngle: 130,
+
+                          //                 // Ending angle of doughnut
+                          //               )
+                          //             ],
+                          //           ),
+                          //           Container(
+                          //             width: 40,
+                          //             //color: Colors.grey,
+                          //             margin:
+                          //                 const EdgeInsets.only(bottom: 20.0),
+                          //             alignment: Alignment.center,
+                          //             child: Column(
+                          //               children: [
+                          //                 Text(
+                          //                   bookedData.toString(),
+                          //                   style: TextStyle(fontSize: 16),
+                          //                   textAlign: TextAlign.right,
+                          //                 ),
+                          //                 const Divider(
+                          //                   height: 10,
+                          //                   color: Colors.black,
+                          //                   indent: 65,
+                          //                   endIndent: 65,
+                          //                 ),
+                          //                 Text(
+                          //                   totalData.toString(),
+                          //                   style: TextStyle(fontSize: 16),
+                          //                   textAlign: TextAlign.right,
+                          //                 ),
+                          //                 const Text(
+                          //                   "Today's Appointments",
+                          //                   style: TextStyle(
+                          //                       fontSize: 15,
+                          //                       fontWeight: FontWeight.w600),
+                          //                   textAlign: TextAlign.right,
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ]),
+                          //   ),
+                          // ),
+                          //),
                           Expanded(
                             child: Container(
-                              margin:
-                                  EdgeInsets.only(top: 12, right: 12, left: 12),
-                              decoration: BoxDecoration(
+                              margin: const EdgeInsets.only(
+                                  top: 12, right: 12, left: 8),
+                              decoration: const BoxDecoration(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8)),
-                                color: Color.fromARGB(45, 229, 187, 110),
-                                //color: ColorSelect.grey200,
-                                // boxShadow: [
-
-                                //   BoxShadow(
-
-                                //     color: ColorSelect.grey400,
-                                //     blurRadius: 5.0, // soften the shadow
-                                //     spreadRadius: 2.0, //extend the shadow
-                                //     offset: Offset(
-                                //       3.0, // Move to right 10  horizontally
-                                //       3.0, // Move to bottom 10 Vertically
-                                //     ),
-                                //   )
-                                // ],
+                                color: Color.fromARGB(73, 229, 187, 110),
                               ),
                               child: Stack(
                                 alignment: Alignment.bottomCenter,
@@ -381,44 +422,42 @@ class DashboardState extends State<Dashboard> {
                                     ],
                                   ),
                                   Container(
-                                    height: 80,
+                                    height: 85,
                                     margin: const EdgeInsets.only(bottom: 20.0),
                                     alignment: Alignment.center,
                                     //color: ColorSelect.grey200,
                                     child: Column(
                                       children: [
                                         Text(
-                                          "___",
-                                          style: TextStyle(fontSize: 18),
+                                          monthBooked.toString(),
+                                          style: const TextStyle(fontSize: 16),
                                           textAlign: TextAlign.right,
+                                        ),
+                                        const Divider(
+                                          height: 10,
+                                          color: Colors.black,
+                                          indent: 70,
+                                          endIndent: 70,
                                         ),
                                         Text(
                                           monthTotal.toString(),
-                                          style: TextStyle(fontSize: 15),
+                                          style: const TextStyle(fontSize: 15),
                                           textAlign: TextAlign.right,
                                         ),
-                                        SizedBox(
-                                          height: 13.9,
+                                        const SizedBox(
+                                          height: 10,
                                         ),
-                                        const Text(
-                                          "Monthly Appointments",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600),
-                                          textAlign: TextAlign.right,
+                                        const Padding(
+                                          padding: EdgeInsets.all(1.0),
+                                          child: Text(
+                                            "Monthly Appointments",
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.right,
+                                          ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    margin: const EdgeInsets.only(bottom: 80.0),
-                                    alignment: Alignment.center,
-                                    //color: ColorSelect.grey200,
-                                    child: Text(
-                                      monthBooked.toString(),
-                                      style: TextStyle(fontSize: 16),
-                                      textAlign: TextAlign.right,
                                     ),
                                   ),
                                 ],
@@ -449,7 +488,7 @@ class DashboardState extends State<Dashboard> {
                               // color: Color.fromARGB(255, 120, 180, 228)),
                               borderRadius: BorderRadius.circular(6.0),
                               color: ColorSelect.grey200,
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromARGB(255, 152, 152, 152),
                                   blurRadius: 4.0,
@@ -509,14 +548,11 @@ class DashboardState extends State<Dashboard> {
                       ),
                     ),
                     Container(
-                      // padding: const EdgeInsets.symmetric(horizontal: 8),
                       margin: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-
                       decoration: BoxDecoration(
-                        // border: Border.all(color: Colors.blue),
                         borderRadius: BorderRadius.circular(6.0),
                         color: ColorSelect.grey200,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.grey,
                             blurRadius: 1.0,
@@ -559,13 +595,13 @@ class DashboardState extends State<Dashboard> {
                           if (!isSameDay(_selectedDay, selectedDay)) {
                             setState(() {
                               _selectedDay = selectedDay;
-                              _focusedDay = focusedDay;
-                              _rangeStart = null; // Important to clean those
-                              _rangeEnd = null;
+                              //_focusedDay = focusedDay;
+                              // _rangeStart = null; // Important to clean those
+                              //_rangeEnd = null;
                               // _rangeSelectionMode = RangeSelectionMode.toggledOff;
                             });
 
-                            print("DATE " + currentDay.toString());
+                            // print("DATE " + currentDay.toString());
                           }
                         },
 
@@ -586,7 +622,7 @@ class DashboardState extends State<Dashboard> {
                           }
                         },
                         onPageChanged: (focusedDay) {
-                          _focusedDay = focusedDay;
+                          //_focusedDay = focusedDay;
                         },
                       ),
                     ),
@@ -627,7 +663,7 @@ class DashboardState extends State<Dashboard> {
                                       //height: 90,
                                       decoration: BoxDecoration(
                                         border: Border.all(color: Colors.blue),
-                                        color: ColorSelect.bluegrey100,
+                                        color: ColorSelect.grey200,
                                         borderRadius:
                                             BorderRadius.circular(8.0),
                                       ),
@@ -718,13 +754,13 @@ class DashboardState extends State<Dashboard> {
 
   Widget profilePictureView(String token, String pimage) {
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      borderRadius: const BorderRadius.all(Radius.circular(8.0)),
       child: CachedNetworkImage(
           imageUrl: Api.getUploadImageApi + pimage,
           height: MediaQuery.of(context).size.height,
           width: 100.0,
           placeholder: (context, url) => Container(
-                child: Image(image: AssetImage("assets/images/pic2.jpg")),
+                child: const Image(image: AssetImage("assets/images/pic2.jpg")),
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(8)),
                 //backgroundColor: Colors.white,
@@ -754,7 +790,7 @@ class DashboardState extends State<Dashboard> {
   Future<void> getTodaysData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    final userId = prefs.getString('userId') ?? '';
+    //final userId = prefs.getString('userId') ?? '';
 
     log("Date  Time  " + today.toString());
 
@@ -793,7 +829,7 @@ class DashboardState extends State<Dashboard> {
   Future<void> getMonthlyData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    final userId = prefs.getString('userId') ?? '';
+    //final userId = prefs.getString('userId') ?? '';
 
     currentDay = DateTime.now();
     var fday = DateTime(currentDay!.year, currentDay!.month, 1);
@@ -838,7 +874,7 @@ class DashboardState extends State<Dashboard> {
   Future<void> getWeekData() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token') ?? '';
-    final userId = prefs.getString('userId') ?? '';
+    //final userId = prefs.getString('userId') ?? '';
 
     DateTime now = DateTime.now();
     int currentDay1 = now.weekday;
@@ -870,7 +906,7 @@ class DashboardState extends State<Dashboard> {
 
           log("BOOKED  " + booked);
         }
-        print(weekList[0]);
+        //print(weekList[0]);
       }
 
       setState(() {
@@ -878,7 +914,7 @@ class DashboardState extends State<Dashboard> {
           ChartData1('Mon', int.parse(weekList[0]), ColorSelect.blueShade800),
           ChartData1('Tue', int.parse(weekList[1]), ColorSelect.lightblue200),
           ChartData1('Wed', int.parse(weekList[2]),
-              Color.fromARGB(240, 241, 150, 108)),
+              const Color.fromARGB(240, 241, 150, 108)),
           ChartData1('Thu', int.parse(weekList[3]), ColorSelect.blueShade800),
           ChartData1('Fri', int.parse(weekList[4]), ColorSelect.lightblue200),
           ChartData1('Sat', int.parse(weekList[5]), ColorSelect.blue),

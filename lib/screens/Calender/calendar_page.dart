@@ -275,7 +275,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                 borderColor:
                                                     startDateBorderColor,
                                                 height: 45.0,
-                                                width: 125.0,
+                                                width: 123.0,
                                                 onTap: () {
                                                   _selectDate(context, "start");
                                                 },
@@ -290,7 +290,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                                 textValue: displayEndDate,
                                                 borderColor: endDateBorderColor,
                                                 height: 45.0,
-                                                width: 125.0,
+                                                width: 123.0,
                                                 onTap: () {
                                                   _selectDate(context, "end");
                                                 },
@@ -426,17 +426,18 @@ class _CalendarPageState extends State<CalendarPage> {
                           Visibility(
                             visible: textVisibility,
                             child: Container(
-                              margin: EdgeInsets.only(left: 4),
-                              padding: EdgeInsets.all(4.0),
+                              margin: const EdgeInsets.only(left: 4),
+                              padding: const EdgeInsets.all(4.0),
                               alignment: Alignment.bottomLeft,
                               child: Text(
                                 "* " + selectedRadioOption.toString(),
-                                style: TextStyle(fontWeight: FontWeight.w600),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.left,
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5.0,
                           ),
                           Column(
@@ -928,7 +929,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       onTap: () {
                         Navigator.of(context).pop();
 
-                        button_Ok();
+                        buttonOk();
                       },
                       child: Container(
                           height: 35,
@@ -1277,11 +1278,11 @@ class _CalendarPageState extends State<CalendarPage> {
     rRRule = rRule;
 
     listOfRules.add({
-      "rule": "${rRule}",
+      "rule": rRule,
       "patients": noOfPatients,
       "intervalSelector": intervalSelection,
       "slot": noOfSlots,
-      "slotSelector": "${visitingRadioSelection}"
+      "slotSelector": visitingRadioSelection
     });
   }
 
@@ -1305,7 +1306,7 @@ class _CalendarPageState extends State<CalendarPage> {
         //  final minutes = diff.inMinutes % 60;
         //  log('$hours hours $minutes minutes');
         //     visitingTrayList[index].slotTime = minutes.toString();
-        print("innnnn");
+        // print("innnnn");
       } else if (end.isAfter(start)) {
         Duration diff = end.difference(start);
         final hours = diff.inHours;
@@ -1577,7 +1578,7 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
-  void button_Ok() {
+  void buttonOk() {
     setState(() {
       textVisibility = true;
     });

@@ -59,21 +59,20 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: <Widget>[
                   const SizedBox(
-                    height: 100,
+                    height: 80,
                   ),
                   SizedBox(
                       height: 280,
                       width: 280,
                       child: Image.asset('assets/images/logo.png')),
-                  Text(
-                    'We will send you a one time password ' +
-                        'to this mobile number.',
+                  const Text(
+                    'We will send you a one time password  to this mobile number.',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   TextFormField(

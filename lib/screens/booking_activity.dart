@@ -80,7 +80,7 @@ class _BookingHistoryActivityState extends State<BookingHistoryActivity> {
                             DateTime.parse("2022-06-17"),
                             DateTime.parse("2022-06-19")),
 
-                        initialSelectedRanges: [],
+                        initialSelectedRanges: const [],
 
                         view: DateRangePickerView.month,
                         monthViewSettings:

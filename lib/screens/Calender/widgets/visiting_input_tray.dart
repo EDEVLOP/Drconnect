@@ -21,6 +21,8 @@ class VisitingTray extends StatelessWidget {
     this.onChangeTextField,
     this.textFieldTitle,
     this.bottomDisplayText,
+    this.onTapTextField,
+    this.ignoreTextFieldPointer,
     //  this.onSubmit,
   }) : super(key: key);
 
@@ -40,6 +42,8 @@ class VisitingTray extends StatelessWidget {
   final int? textFieldValue;
   final String? textFieldTitle;
   final String? bottomDisplayText;
+  final Function()? onTapTextField;
+  final bool? ignoreTextFieldPointer;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +102,7 @@ class VisitingTray extends StatelessWidget {
                 textValue: startTimeText,
                 borderColor: startTimeOutlineColor,
                 height: 45.0,
-                width: 125.0,
+                width: 123.0,
                 onTap: startTimeOnTap,
                 textColor: ColorSelect.black,
                 text: "From",
@@ -111,7 +115,7 @@ class VisitingTray extends StatelessWidget {
                 textValue: endTimeText,
                 borderColor: endTimeOutlineColor,
                 height: 45.0,
-                width: 125.0,
+                width: 123.0,
                 onTap: endTimeOnTap,
                 textColor: ColorSelect.black,
                 text: "To",
@@ -170,8 +174,8 @@ class VisitingTray extends StatelessWidget {
               height: 45,
               width: 130,
               title: textFieldTitle!,
-              textEditingController:
-                  TextEditingController(text: textFieldValue.toString()),
+              textEditingController: TextEditingController(
+                  text: textFieldValue == 0 ? "" : textFieldValue.toString()),
               onChanged: onChangeTextField,
               //onSubmit: onSubmit,
             ),
